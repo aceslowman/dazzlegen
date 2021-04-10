@@ -37,7 +37,7 @@ module.exports = {
     liveReload: false,
     disableHostCheck: true,
     port: process.env.PORT,
-    public: "camogen-lite.glitch.me",
+    public: "dazzlegen.glitch.me",
     // https: true,
     // proxy: {
     //   "/api": "http://localhost:3001"

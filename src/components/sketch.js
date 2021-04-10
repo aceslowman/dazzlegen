@@ -95,7 +95,7 @@ export default function sketch(p) {
     }
 
     if (props.snapshotFlag !== snapshotFlag) {
-      p.saveCanvas(canvas, "camogen_" + stringGen(6));
+      p.saveCanvas(canvas, "dazzlegen_" + stringGen(6));
       snapshotFlag = props.snapshotFlag;
     }
   };

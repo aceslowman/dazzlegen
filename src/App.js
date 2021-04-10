@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 
 import P5Wrapper from 'react-p5-wrapper';
 import sketch from './components/sketch';
@@ -186,7 +185,7 @@ export default class App extends React.Component {
       <div id="flexcontainer">
         <div id="textcontainer">
           <div id="textcontainer_top">
-            <h1 style={{width: '100%'}}>camogen</h1><sub className="invert">v1.0</sub>
+            <h1 style={{width: '100%'}}>dazzlegen</h1><sub className="invert">v1.0</sub>
           </div>
           <div id="textcontainer_inner">
             {this.layers}
