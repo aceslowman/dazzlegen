@@ -1,5 +1,5 @@
 let glyphs = [];
-let layers;
+let levels;
 let generateFlag = false;
 let snapshotFlag = false;
 
@@ -7,7 +7,8 @@ let canvas;
 let canvas_width = window.innerHeight;
 let canvas_height = window.innerHeight;
 
-layers = [
+/* describes the behavior of each successive level */
+levels = [
   {
     glyphs: [],
     dim: [30, 30],
@@ -31,12 +32,9 @@ layers = [
 // https: //stackoverflow.com/questions/16106701/how-to-generate-a-random-string-of-letters-and-numbers-in-javascript
 function stringGen(len) {
   var text = "";
-
   var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
-
   for (var i = 0; i < len; i++)
     text += charset.charAt(Math.floor(Math.random() * charset.length));
-
   return text;
 }
 
@@ -53,12 +51,12 @@ export default function sketch(p) {
 
   /* as changes come in from the interface, adjust and redraw sketch */
   p.myCustomRedrawAccordingToNewPropsHandler = function(props) {
-    if (props.levels && layers) {
-      if (Object.keys(props.levels).length < layers.length) {
-        layers.pop();
+    if (props.levels && levels) {
+      if (Object.keys(props.levels).length < levels.length) {
+        levels.pop();
       }
 
-      // update local copy of all layers
+      // update local copy of all levels
       for (let i = 0; i < Object.keys(props.levels).length; i++) {
         let t_obj = {
           noise: {
@@ -69,10 +67,10 @@ export default function sketch(p) {
           seed: props.levels[i].seed
         };
 
-        if (layers[i]) {
-          layers[i] = t_obj;
+        if (levels[i]) {
+          levels[i] = t_obj;
         } else {
-          layers.push(t_obj);
+          levels.push(t_obj);
         }
       }
     }
@@ -106,12 +104,12 @@ export default function sketch(p) {
     glyphs.push(
       new Glyph()
         .anchor(0, 0)
-        .dim(layers[0].dim[0], layers[0].dim[1])
+        .dim(levels[0].dim[0], levels[0].dim[1])
         .size(p.width, p.height)
-        .seed(layers[0].seed)
-        .noise(layers[0].noise.scale, layers[0].noise.steps)
+        .seed(levels[0].seed)
+        .noise(levels[0].noise.scale, levels[0].noise.steps)
         // .stroke(0)
-        .fill(layers[0].seed * 255)
+        .fill(levels[0].seed * 255)
       // .padding(10,10)
       // .draw()
     );
@@ -130,10 +128,10 @@ export default function sketch(p) {
         t.x_anchor + x * w + t.x_padding,
         t.y_anchor + y * h + t.y_padding
       )
-      .dim(layers[l].dim[0], layers[l].dim[1])
+      .dim(levels[l].dim[0], levels[l].dim[1])
       .size(w - t.x_padding, h - t.y_padding)
-      .seed(layers[l].seed + t.cells[i])
-      .noise(layers[l].noise.scale, layers[1].noise.steps)
+      .seed(levels[l].seed + t.cells[i])
+      .noise(levels[l].noise.scale, levels[1].noise.steps)
       // .stroke(255)
       // .fill(t.cells[i]*255)
       .fill(0)
@@ -144,10 +142,7 @@ export default function sketch(p) {
     // (previous glyph, x coord, y coord, cell index)
     glyphs.push(glyph);
 
-    // console.log('l',l);
-    // console.log('layers.length',layers.length);
-
-    if (l < layers.length - 1) {
+    if (l < levels.length - 1) {
       l += 1;
       glyph.next((t, x, y, i) => next_func(t, x, y, i, l));
     }
@@ -205,10 +200,12 @@ export default function sketch(p) {
     }
 
     noise(scale, steps) {
+      /* set seed for random generation */
       p.noiseSeed(this._seed);
 
       for (let _x = 0; _x < this.x_dim; _x++) {
         for (let _y = 0; _y < this.y_dim; _y++) {
+          /* set the color of the cell according to its position and scale */
           let cell = p.noise(_x * scale + this._seed, _y * scale + this._seed);
 
           if (steps !== undefined) {
@@ -273,43 +270,3 @@ export default function sketch(p) {
     }
   }
 }
-
-// function lvlUp() {
-//     layers.push({
-//         glyphs: [],
-//         dim: [3, 3],
-//         noise: {
-//             scale: 0.1,
-//             steps: 6
-//         }
-//     });
-// }
-
-// function lvlDown() {
-//     layers.pop();
-// }
-
-// function randomize() {
-//     layers = [{
-//             glyphs: [],
-//             size: [p.width, p.height],
-//             dim: [p.random(1, 60), p.random(1, 60)],
-//             noise: {
-//                 scale: p.random(2),
-//                 steps: p.random(10)
-//             }
-//         },
-//         {
-//             glyphs: [],
-//             size: [p.width, p.height],
-//             dim: [p.random(1, 60), p.random(1, 60)],
-//             noise: {
-//                 scale: p.random(2),
-//                 steps: p.random(10)
-//             }
-//         },
-//     ];
-
-//     generate();
-//     // createUI();
-// }
