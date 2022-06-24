@@ -239,7 +239,8 @@ export default function sketch(p) {
 
     draw() {
       /*  
-        
+        this really just draws each cell to it's position, 
+        does not generate noise itself
       */
       for (let _x = 0, i = 0; _x < this.x_dim; _x++) {
         for (let _y = 0; _y < this.y_dim; _y++, i++) {
