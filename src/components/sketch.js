@@ -110,13 +110,15 @@ export default function sketch(p) {
         .size(p.width, p.height)
         .seed(layers[0].seed)
         .noise(layers[0].noise.scale, layers[0].noise.steps)
-        .stroke(0)
+        // .stroke(0)
         .fill(layers[0].seed * 255)
       // .padding(10,10)
       // .draw()
     );
 
     glyphs[0].next((t, x, y, i) => next_func(t, x, y, i, 1));
+    
+    console.log({glyphs})
   };
 
   let next_func = (t, x, y, i, l) => {
