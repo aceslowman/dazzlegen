@@ -238,6 +238,9 @@ export default function sketch(p) {
     }
 
     draw() {
+      /*  
+        
+      */
       for (let _x = 0, i = 0; _x < this.x_dim; _x++) {
         for (let _y = 0; _y < this.y_dim; _y++, i++) {
           let pos_x = (_x / this.x_dim) * this.width;
