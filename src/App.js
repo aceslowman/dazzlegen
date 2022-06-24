@@ -167,21 +167,22 @@ export default class App extends React.Component {
   /* sets the container dimensions to the maximum width */
   handleFitScreen() {
     let c = document.getElementById("defaultCanvas0").parentNode;
-    console.log('1')
+    
+        
 
-    if (c.offsetHeight > c.offsetWidth) {
-      console.log('2')
+    // if (c.offsetHeight > c.offsetWidth) {
+    //   console.log('2')
+    //   this.setState({
+    //     width: c.parentNode.offsetHeight,
+    //     height: c.parentNode.offsetHeight,
+    //   });
+    // } else {
+      // console.log('3')
       this.setState({
-        width: c.offsetHeight,
-        height: c.offsetHeight,
+        width: c.parentNode.offsetWidth/2,
+        height: c.parentNode.offsetWidth/2,
       });
-    } else {
-      console.log('3')
-      this.setState({
-        width: c.offsetWidth,
-        height: c.offsetWidth,
-      });
-    }
+    // }
   }
 
   render() {

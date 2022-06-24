@@ -76,8 +76,7 @@ export default function sketch(p) {
       }
     }
 
-    if (props.width !== canvas_width) {
-      console.log('width changed')
+    if (props.width !== canvas_width) {      
       canvas_width = props.width;
       p.setup();
     }
