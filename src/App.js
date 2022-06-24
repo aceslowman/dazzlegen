@@ -38,16 +38,17 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    window.addEventListener("resize", this.handleWindowResize);
+    window.addEventListener("resize", (e) => this.handleWindowResize(e));
   }
-  
+
   componentWillUnmount() {
-    window.addEventListener("resize", null);
+    window.removeEventListener("resize", (e) => this.handleWindowResize(e));
   }
-  
+
   handleWindowResize(event) {
-    console.log('hit')
-    // this.setState({ WindowSize: window.innerWidth });
+    console.log("hit", { width: window.innerHeight, height: window.innerHeight });
+    
+    this.setState({ width: window.innerHeight, height: window.innerHeight });
   }
 
   handleGenerate() {
@@ -170,7 +171,7 @@ export default class App extends React.Component {
   }
 
   /* when container dimensions are changed */
-  handleResize(e) {
+  handleCanvasResize(e) {
     this.setState({
       width: e.target.value,
       height: e.target.value,
@@ -221,7 +222,7 @@ export default class App extends React.Component {
             </div>
             <InputGroup name="container dimensions">
               <button onClick={() => this.handleFitScreen()}>fit</button>
-              <select onChange={(e) => this.handleResize(e)}>
+              <select onChange={(e) => this.handleCanvasResize(e)}>
                 <option value={64}>64 x 64</option>
                 <option value={128}>128 x 128</option>
                 <option value={256}>256 x 256</option>
