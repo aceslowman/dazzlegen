@@ -12,7 +12,7 @@ export default class App extends React.Component {
 
     this.layers = [];
 
-    // 
+    // stores all data for application
     this.state =  {
       width: window.innerHeight,
       height: window.innerHeight,
@@ -103,12 +103,13 @@ export default class App extends React.Component {
       }
     }));
 
+    // refresh with each change
     // this.handleGenerate();
   }
 
   generateLayers(){
     this.layers = [];
-    // return;
+    
     for (let i = 0; i < Object.keys(this.state.levels).length; i++) {
       this.layers.push(( 
         <fieldset key={i} style={{marginBottom:'15px'}}>
@@ -156,6 +157,7 @@ export default class App extends React.Component {
   }
 
   handleResize(e) {
+    console.log()
     this.setState( {
       width: e.target.value,
       height: e.target.value
@@ -184,14 +186,14 @@ export default class App extends React.Component {
 
     return (
       <div id="flexcontainer">
-        <div id="textcontainer">
-          <div id="textcontainer_top">
+        <div id="interfacecontainer">
+          <div id="interfacecontainer_top">
             <h1 style={{width: '100%'}}>dazzlegen</h1><sub className="invert">v1.0</sub>
           </div>
-          <div id="textcontainer_inner">
+          <div id="interfacecontainer_inner">
             {this.layers}
           </div>  
-          <div id="textcontainer_bottom">
+          <div id="interfacecontainer_bottom">
             <div id="buttoncontainer">
               <button onClick={() => this.handleGenerate()}>generate</button>
               <button onClick={() => this.handleRandomize()}>randomize</button>
@@ -214,7 +216,6 @@ export default class App extends React.Component {
           </div>
         </div>
         <P5Wrapper 
-
           id="canvascontainer"
           sketch={sketch} 
           width={this.state.width}
