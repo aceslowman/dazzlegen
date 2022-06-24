@@ -12,6 +12,7 @@ export default class App extends React.Component {
 
     this.layers = [];
 
+    // 
     this.state =  {
       width: window.innerHeight,
       height: window.innerHeight,
