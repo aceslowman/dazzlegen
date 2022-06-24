@@ -30,6 +30,7 @@ body,
   align-items: center;
   align-content: stretch;
   height: 100%;
+  width: 100%;
   box-sizing: border-box;
   overflow: hidden;
   background-color: black;
@@ -39,7 +40,8 @@ body,
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  width: 50%;
+  width: 100%;
+/*   width: 50%; */
 }
 
 #interfacecontainer {
@@ -55,7 +57,7 @@ body,
   /* align-content: flex-start; */
   align-items: center;
   align-content: center;
-  flex-flow: column;
+  flex-flow: row;
 }
 
 #interfacecontainer_top {
@@ -82,10 +84,10 @@ body,
   margin: 15px 30px;
 }
 
-#canvascontainer {
+/* #canvascontainer {
   width: 50%;
   background-color: black;
-}
+} */
 
 #defaultCanvas0 {
   /* flex: 0 1 auto; */

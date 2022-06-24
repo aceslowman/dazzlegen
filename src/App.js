@@ -46,8 +46,6 @@ export default class App extends React.Component {
   }
 
   handleWindowResize(event) {
-    console.log("hit", { width: window.innerHeight, height: window.innerHeight });
-    
     this.setState({ width: window.innerHeight, height: window.innerHeight });
   }
 
@@ -197,13 +195,15 @@ export default class App extends React.Component {
 
   render() {
     this.generateInterface();
+    
+    console.log([this.state.width, this.state.height])
 
     return (
       <div
         id="flexcontainer"
         style={{
           flexDirection:
-            this.state.width > this.state.height ? "row" : "column",
+            (this.state.width > this.state.height) ? "row" : "column",
         }}
       >
         <div id="interfacecontainer">
