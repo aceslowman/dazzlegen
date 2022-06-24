@@ -51,6 +51,7 @@ export default function sketch(p) {
     generate(p);
   };
 
+  /* as changes come in from the interface, adjust and redraw sketch */
   p.myCustomRedrawAccordingToNewPropsHandler = function(props) {
     if (props.levels && layers) {
       if (Object.keys(props.levels).length < layers.length) {
@@ -109,7 +110,7 @@ export default function sketch(p) {
         .size(p.width, p.height)
         .seed(layers[0].seed)
         .noise(layers[0].noise.scale, layers[0].noise.steps)
-        // .stroke(0)
+        .stroke(0)
         .fill(layers[0].seed * 255)
       // .padding(10,10)
       // .draw()

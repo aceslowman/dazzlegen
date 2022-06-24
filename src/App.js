@@ -167,22 +167,18 @@ export default class App extends React.Component {
   /* sets the container dimensions to the maximum width */
   handleFitScreen() {
     let c = document.getElementById("defaultCanvas0").parentNode;
-    
-        
+    this.setState({
+      width: c.parentNode.offsetWidth / 2,
+      height: c.parentNode.offsetWidth / 2,
+    });
+  }
 
-    // if (c.offsetHeight > c.offsetWidth) {
-    //   console.log('2')
-    //   this.setState({
-    //     width: c.parentNode.offsetHeight,
-    //     height: c.parentNode.offsetHeight,
-    //   });
-    // } else {
-      // console.log('3')
-      this.setState({
-        width: c.parentNode.offsetWidth/2,
-        height: c.parentNode.offsetWidth/2,
-      });
-    // }
+  handleExpandScreen() {
+    let c = document.getElementById("defaultCanvas0").parentNode;
+    this.setState({
+      width: c.parentNode.offsetHeight,
+      height: c.parentNode.offsetHeight,
+    });
   }
 
   render() {
@@ -206,6 +202,7 @@ export default class App extends React.Component {
             </div>
             <InputGroup name="container dimensions">
               <button onClick={() => this.handleFitScreen()}>fit</button>
+              <button onClick={() => this.handleExpandScreen()}>expand</button>
               <select onChange={(e) => this.handleCanvasResize(e)}>
                 <option value={64}>64 x 64</option>
                 <option value={128}>128 x 128</option>
