@@ -42,9 +42,6 @@ function stringGen(len) {
 
 export default function sketch(p) {
   p.setup = () => {
-    console.log("setup");
-
-    // canvas = p.createCanvas(window.innerHeight, window.innerHeight);
     canvas = p.createCanvas(canvas_width, canvas_height);
 
     p.smooth();
@@ -80,6 +77,7 @@ export default function sketch(p) {
     }
 
     if (props.width !== canvas_width) {
+      console.log('width changed')
       canvas_width = props.width;
       p.setup();
     }
@@ -124,8 +122,6 @@ export default function sketch(p) {
   let next_func = (t, x, y, i, l) => {
     let w = t.width / t.x_dim;
     let h = t.height / t.y_dim;
-
-    // console.log(layers[l]);
 
     let glyph = new Glyph()
       .anchor(
