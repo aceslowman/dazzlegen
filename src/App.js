@@ -59,6 +59,9 @@ export default class App extends React.Component {
   }
 
   handleLevelDown() {
+    /* don't go below one level */
+    if(Object.keys(this.state.levels).length === 1) return;
+    
     let last = Object.keys(this.state.levels).length - 1;
 
     let newState = this.state;
@@ -66,9 +69,10 @@ export default class App extends React.Component {
     this.setState(newState);
   }
 
+  /* randomization ranges should be little safer */
   handleRandomize() {
     for (let i = 0; i < 2; i++) {
-      let dim = Math.floor(Math.random() * (60 / (i + 1)));
+      let dim = Math.floor(Math.random() * (20 / (i + 1)));
 
       this.setState((prevState) => ({
         levels: {

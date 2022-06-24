@@ -118,7 +118,7 @@ export default function sketch(p) {
 
     glyphs[0].next((t, x, y, i) => next_func(t, x, y, i, 1));
     
-    console.log({glyphs})
+    // console.log({glyphs})
   };
 
   let next_func = (t, x, y, i, l) => {
