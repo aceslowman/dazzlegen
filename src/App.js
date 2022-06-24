@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import P5Wrapper from 'react-p5-wrapper';
-import sketch from './components/sketch';
+import P5Wrapper from "react-p5-wrapper";
+import sketch from "./components/sketch";
 
-import InputGroup from './components/InputGroup';
-import InputFloat from './components/InputFloat';
+import InputGroup from "./components/InputGroup";
+import InputFloat from "./components/InputFloat";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -13,38 +13,51 @@ export default class App extends React.Component {
     this.layers = [];
 
     // stores all data for application
-    this.state =  {
+    this.state = {
       width: window.innerHeight,
       height: window.innerHeight,
       generateFlag: false,
       snapshotFlag: false,
-      levels:{
+      levels: {
         0: {
           seed: Math.floor(Math.random() * 1000),
           noiseScale: 0.1,
           noiseStep: 8,
           dimX: 20,
-          dimY: 20
+          dimY: 20,
         },
         1: {
           seed: Math.floor(Math.random() * 1000),
           noiseScale: 2,
           noiseStep: 8,
           dimX: 6,
-          dimY: 6
+          dimY: 6,
         },
-      }
-    }
+      },
+    };
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.handleWindowResize);
+  }
+  
+  componentWillUnmount() {
+    window.addEventListener("resize", null);
+  }
+  
+  handleWindowResize(event) {
+    console.log('hit')
+    // this.setState({ WindowSize: window.innerWidth });
   }
 
   handleGenerate() {
-    this.setState(prevState  =>  ({generateFlag: !prevState.generateFlag}))
+    this.setState((prevState) => ({ generateFlag: !prevState.generateFlag }));
   }
 
   handleLevelUp() {
     let next = Object.keys(this.state.levels).length;
 
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       levels: {
         ...prevState.levels,
         [next]: {
@@ -53,9 +66,9 @@ export default class App extends React.Component {
           noiseStep: 8,
           dimX: 2,
           dimY: 2,
-        }
-      }
-    }))
+        },
+      },
+    }));
   }
 
   handleLevelDown() {
@@ -63,14 +76,14 @@ export default class App extends React.Component {
 
     let newState = this.state;
     delete newState.levels[last];
-    this.setState(newState)
+    this.setState(newState);
   }
 
   handleRandomize() {
-    for(let i=0;i<2;i++) {
+    for (let i = 0; i < 2; i++) {
       let dim = Math.floor(Math.random() * (60 / (i + 1)));
 
-      this.setState(prevState => ({
+      this.setState((prevState) => ({
         levels: {
           ...prevState.levels,
           [i]: {
@@ -80,119 +93,124 @@ export default class App extends React.Component {
             noiseStep: 8,
             dimX: dim,
             dimY: dim,
-          }
-        }
-      }))
+          },
+        },
+      }));
     }
 
     this.handleGenerate();
   }
 
   handleSnapshot() {
-    this.setState(prevState  =>  ({snapshotFlag: !prevState.snapshotFlag}))
+    this.setState((prevState) => ({ snapshotFlag: !prevState.snapshotFlag }));
   }
 
-  updateParameter(i,k,v){
-    this.setState(prevState => ({
+  updateParameter(i, k, v) {
+    this.setState((prevState) => ({
       levels: {
         ...prevState.levels,
         [i]: {
           ...prevState.levels[i],
-          [k]: v
-        }
-      }
+          [k]: v,
+        },
+      },
     }));
 
     // refresh with each change
     // this.handleGenerate();
   }
 
-  generateLayers(){
+  generateInterface() {
     this.layers = [];
-    
+
     for (let i = 0; i < Object.keys(this.state.levels).length; i++) {
-      this.layers.push(( 
-        <fieldset key={i} style={{marginBottom:'15px'}}>
+      this.layers.push(
+        <fieldset key={i} style={{ marginBottom: "15px" }}>
           <small>
             <legend> lvl {i} </legend>
-            <InputGroup name='noise'>
-              <InputFloat 
-                val={this.state.levels[i].noiseScale} 
-                step="0.1" 
+            <InputGroup name="noise">
+              <InputFloat
+                val={this.state.levels[i].noiseScale}
+                step="0.1"
                 name="scale"
-                onChange={(v) => this.updateParameter(i,'noiseScale',v)}
+                onChange={(v) => this.updateParameter(i, "noiseScale", v)}
               />
-              <InputFloat 
-                val={this.state.levels[i].noiseStep} 
-                step="1" 
+              <InputFloat
+                val={this.state.levels[i].noiseStep}
+                step="1"
                 name="step"
-                onChange={(v) => this.updateParameter(i,'noiseStep',v)}
+                onChange={(v) => this.updateParameter(i, "noiseStep", v)}
               />
             </InputGroup>
 
-            <InputGroup name='dimensions'>
-              <InputFloat 
-                val={this.state.levels[i].dimX} 
-                step="1" 
+            <InputGroup name="dimensions">
+              <InputFloat
+                val={this.state.levels[i].dimX}
+                step="1"
                 name="x"
-                onChange={(v) => this.updateParameter(i,'dimX',v)}
+                onChange={(v) => this.updateParameter(i, "dimX", v)}
               />
-              <InputFloat 
-                val={this.state.levels[i].dimY} 
-                step="1" 
+              <InputFloat
+                val={this.state.levels[i].dimY}
+                step="1"
                 name="y"
-                onChange={(v) => this.updateParameter(i,'dimY',v)}
+                onChange={(v) => this.updateParameter(i, "dimY", v)}
               />
             </InputGroup>
-              <InputFloat 
-                val={this.state.levels[i].seed} 
-                step="1" 
-                name="seed"
-                onChange={(v) => this.updateParameter(i,'seed',v)}
-              />
+            <InputFloat
+              val={this.state.levels[i].seed}
+              step="1"
+              name="seed"
+              onChange={(v) => this.updateParameter(i, "seed", v)}
+            />
           </small>
         </fieldset>
-      ));
+      );
     }
   }
 
+  /* when container dimensions are changed */
   handleResize(e) {
-    console.log()
-    this.setState( {
+    this.setState({
       width: e.target.value,
-      height: e.target.value
+      height: e.target.value,
     });
   }
 
+  /* sets the container dimensions to the maximum width */
   handleFitScreen() {
-    let c = document.getElementById('defaultCanvas0').parentNode;
-    console.log(c.offsetHeight);
+    let c = document.getElementById("defaultCanvas0").parentNode;
 
-    if(c.offsetHeight > c.offsetWidth) {
+    if (c.offsetHeight > c.offsetWidth) {
       this.setState({
         width: c.offsetHeight,
-        height: c.offsetHeight
+        height: c.offsetHeight,
       });
-    }else {
+    } else {
       this.setState({
         width: c.offsetWidth,
-        height: c.offsetWidth
+        height: c.offsetWidth,
       });
     }
   }
 
   render() {
-    this.generateLayers();
+    this.generateInterface();
 
     return (
-      <div id="flexcontainer">
+      <div
+        id="flexcontainer"
+        style={{
+          flexDirection:
+            this.state.width > this.state.height ? "row" : "column",
+        }}
+      >
         <div id="interfacecontainer">
           <div id="interfacecontainer_top">
-            <h1 style={{width: '100%'}}>dazzlegen</h1><sub className="invert">v1.0</sub>
+            <h1 style={{ width: "100%" }}>dazzlegen</h1>
+            <sub className="invert">v1.0</sub>
           </div>
-          <div id="interfacecontainer_inner">
-            {this.layers}
-          </div>  
+          <div id="interfacecontainer_inner">{this.layers}</div>
           <div id="interfacecontainer_bottom">
             <div id="buttoncontainer">
               <button onClick={() => this.handleGenerate()}>generate</button>
@@ -215,9 +233,9 @@ export default class App extends React.Component {
             </InputGroup>
           </div>
         </div>
-        <P5Wrapper 
+        <P5Wrapper
           id="canvascontainer"
-          sketch={sketch} 
+          sketch={sketch}
           width={this.state.width}
           height={this.state.height}
           levels={this.state.levels}
