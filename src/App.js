@@ -37,18 +37,6 @@ export default class App extends React.Component {
     };
   }
 
-  componentDidMount() {
-    window.addEventListener("resize", (e) => this.handleWindowResize(e));
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", (e) => this.handleWindowResize(e));
-  }
-
-  handleWindowResize(event) {
-    this.setState({ width: window.innerHeight, height: window.innerHeight });
-  }
-
   handleGenerate() {
     this.setState((prevState) => ({ generateFlag: !prevState.generateFlag }));
   }
@@ -195,17 +183,9 @@ export default class App extends React.Component {
 
   render() {
     this.generateInterface();
-    
-    console.log([this.state.width, this.state.height])
 
     return (
-      <div
-        id="flexcontainer"
-        style={{
-          flexDirection:
-            (this.state.width > this.state.height) ? "row" : "column",
-        }}
-      >
+      <div id="flexcontainer">
         <div id="interfacecontainer">
           <div id="interfacecontainer_top">
             <h1 style={{ width: "100%" }}>dazzlegen</h1>
