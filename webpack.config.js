@@ -36,8 +36,8 @@ module.exports = {
     inline: false,
     liveReload: false,
     disableHostCheck: true,
-    port: process.env.PORT,
-    public: "dazzlegen.glitch.me",
+    port: 3030,
+    // public: "dazzlegen.glitch.me",
     // https: true,
     // proxy: {
     //   "/api": "http://localhost:3001"

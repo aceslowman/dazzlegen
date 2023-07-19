@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script src="js/libraries/p5.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
+  <title>dazzlegen</title>
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+
+<body>
+  <div id="container">
+    <div id="controls">
+      <div id="title">
+        <h1>dazzlegen</h1>
+        <div>v 1.1</div>
+      </div>
+
+      <div id="controlsInner">
+        <fieldset>
+          <legend> lvl 0 </legend>
+
+          <fieldset class="levelParameter">
+            <legend>noise</legend>
+
+            <div class="flex-inner-wrapper">
+              <fieldset>
+                <legend>scale</legend>
+                <input type="number" />
+              </fieldset>
+
+              <fieldset>
+                <legend>step</legend>
+                <input type="number" />
+              </fieldset>
+            </div>
+          </fieldset>
+
+          <fieldset class="levelParameter">
+            <legend>dimensions</legend>
+
+            <div class="flex-inner-wrapper">
+              <fieldset>
+                <legend>width</legend>
+                <input type="number" />
+              </fieldset>
+
+              <fieldset>
+                <legend>height</legend>
+                <input type="number" />
+              </fieldset>
+            </div>
+          </fieldset>
+
+          <fieldset class="levelParameter">
+            <legend>seed</legend>
+            <input type="number" />
+          </fieldset>
+        </fieldset>
+
+
+      </div>
+
+    </div>
+    <div id="workArea"></div>
+  </div>
+
+  <script type="module" defer src="Main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,4 @@
+- [ ] Need to remove all react from this project
+- [ ] add 100x100 option for dimensions
+- [ ] Move project to itch.io for better analytics and to get projects in one place
+- [ ] make it possible to add / remove levels 
