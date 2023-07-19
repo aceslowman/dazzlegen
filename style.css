@@ -11,11 +11,11 @@ body,
 #container {
   display: flex;
   flex-flow: row;
-  background-color: purple;
+  /* background-color: purple; */
 }
 
 #controls {
-  background-color: yellow;
+  /* background-color: yellow; */
   width: 50%;
   display: flex;
   flex-flow: column;
@@ -41,13 +41,14 @@ body,
 }
 
 #workArea {
-  background-color: orange;
+  /* background-color: orange; */
   width: 50%;
   height: 100%;
   display: flex;
   flex-flow: column;
   align-self: center;
   align-items: center;
+  justify-content: center;
 }
 
 .inputGroup {
@@ -67,6 +68,10 @@ body,
   flex-flow:row wrap;
 }
 
-.levelParameter > div > fieldset {
+.levelParameter > fieldset {
   border: 1px dashed gray;
+}
+
+.levelParameter > fieldset > input {
+  width: 50px;
 }
