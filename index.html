@@ -18,54 +18,23 @@
     <div id="controls">
       <div id="title">
         <h1>dazzlegen</h1>
-        <div>v 1.1</div>
+        <div id="version">v 1.1</div>
       </div>
 
-      <div id="controlsInner">
-        <!-- <fieldset>
-          <legend> lvl 0 </legend>
 
-          <fieldset class="levelParameter">
-            <legend>noise</legend>
+        <div id="levelsControl"></div>
 
-            <div class="flex-inner-wrapper">
-              <fieldset>
-                <legend>scale</legend>
-                <input type="number" />
-              </fieldset>
-
-              <fieldset>
-                <legend>step</legend>
-                <input type="number" />
-              </fieldset>
-            </div>
-          </fieldset>
-
-          <fieldset class="levelParameter">
-            <legend>dimensions</legend>
-
-            <div class="flex-inner-wrapper">
-              <fieldset>
-                <legend>width</legend>
-                <input type="number" />
-              </fieldset>
-
-              <fieldset>
-                <legend>height</legend>
-                <input type="number" />
-              </fieldset>
-            </div>
-          </fieldset>
-
-          <fieldset class="levelParameter">
-            <legend>seed</legend>
-            <input type="number" />
-          </fieldset>
-        </fieldset> -->
-
-
+      <div id="staticControl">
+        <button id="generateButton">generate</button>
+        <select id="resolutionSelect">
+          <option value="64">64x64</option>
+          <option value="128">128x128</option>
+          <option value="256">256x256</option>
+          <option value="512">512x512</option>
+          <option value="1024">1024x1024</option>
+        </select>
+        <button id="snapshotButton">snap</button>
       </div>
-
     </div>
     <div id="workArea"></div>
   </div>

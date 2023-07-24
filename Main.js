@@ -1,8 +1,12 @@
 import Glyph from "./js/Glyph.js";
 import { stringGen } from "./js/Utilities.js";
-import {createParameterGroup, createParameterInput} from "./js/Interface.js";
+import { createParameterGroup, createParameterInput } from "./js/Interface.js";
 
 let glyphs;
+let cnv;
+
+/* output resolution when saving */
+let outputResolution = [128, 128];
 
 /* describes the behavior of each successive level */
 let levels = [
@@ -30,13 +34,7 @@ window.workAreaElement = document.querySelector("#workArea");
 window.workAreaBounds = workAreaElement.getBoundingClientRect();
 
 window.setup = async () => {
-  console.log(window.workAreaBounds);
-
-  let cnv = createCanvas(
-    // window.workAreaBounds.width,
-    // window.workAreaBounds.height
-    100,100
-  );
+  cnv = createCanvas(window.workAreaBounds.width, window.workAreaBounds.width);
 
   cnv.parent("workArea");
 
@@ -50,69 +48,103 @@ window.setup = async () => {
 };
 
 let createInterface = () => {
-  // this creates a single level. shoudl be possible to add / remove
-  let levelInterfaceContainer = document.createElement("fieldset");
+  for (let i = 0; i < levels.length; i++) {
+    // this creates a single level. shoudl be possible to add / remove
+    let levelInterfaceContainer = document.createElement("fieldset");
+    levelInterfaceContainer.classList.add('levelGroup')
 
-  // level legend
-  let levelLegend = document.createElement("legend");
-  levelLegend.innerText = "lvl 0";
-  levelInterfaceContainer.appendChild(levelLegend);
+    // level legend
+    let levelLegend = document.createElement("legend");
+    levelLegend.innerText = "lvl " + i;
+    levelInterfaceContainer.appendChild(levelLegend);
 
-  // level noise param group
-  let levelNoiseParamGroup = createParameterGroup("noise");
+    // level noise param group
+    let levelNoiseParamGroup = createParameterGroup("noise");
 
-  // add scale param
-  let levelNoiseScaleInput = createParameterInput(
-    "scale",
-    "number",
-    0,
-    (e) => {}
-  );
-  let levelNoiseStepInput = createParameterInput(
-    "step",
-    "number",
-    0,
-    (e) => {}
-  );
+    // add scale param
+    let levelNoiseScaleInput = createParameterInput(
+      "scale",
+      "number",
+      levels[i].noise.scale,
+      (e) => {
+        levels[i].noise.scale = Number(e.target.value);
+      }
+    );
 
-  // append to group
-  levelNoiseParamGroup.appendChild(levelNoiseScaleInput);
-  levelNoiseParamGroup.appendChild(levelNoiseStepInput);
+    let levelNoiseStepInput = createParameterInput(
+      "step",
+      "number",
+      levels[i].noise.steps,
+      (e) => {
+        levels[i].noise.steps = Number(e.target.value);
+      }
+    );
 
-  let levelDimensionsParamGroup = createParameterGroup("dimensions");
+    // append to group
+    levelNoiseParamGroup.appendChild(levelNoiseScaleInput);
+    levelNoiseParamGroup.appendChild(levelNoiseStepInput);
 
-  // add width / height param
-  let levelDimensionsWidth = createParameterInput("width", "number", 0, (e) => {
-    levels[0].dim[0] = e.target.value;
-    console.log("hello", levels[0].dim[0]);
-  });
-  let levelDimensionsHeight = createParameterInput(
-    "height",
-    "number",
-    0,
-    (e) => {
-      levels[0].dim[1] = e.target.value;
-      console.log("hello", levels[0].dim[1]);
-    }
-  );
+    let levelDimensionsParamGroup = createParameterGroup("dimensions");
 
-  // append to group
-  levelDimensionsParamGroup.appendChild(levelDimensionsWidth);
-  levelDimensionsParamGroup.appendChild(levelDimensionsHeight);
+    // add width / height param
+    let levelDimensionsWidth = createParameterInput(
+      "width",
+      "number",
+      levels[0].dim[0],
+      (e) => {
+        levels[i].dim[0] = e.target.value;
+        console.log("hello", levels[0].dim[0]);
+      }
+    );
 
-  levelInterfaceContainer.appendChild(levelNoiseParamGroup);
-  levelInterfaceContainer.appendChild(levelDimensionsParamGroup);
+    let levelDimensionsHeight = createParameterInput(
+      "height",
+      "number",
+      levels[i].dim[1],
+      (e) => {
+        levels[i].dim[1] = e.target.value;
+        console.log("hello", levels[0].dim[1]);
+      }
+    );
 
-  // add level to wrapper
-  let controlsInner = document.querySelector("#controlsInner");
+    // append to group
+    levelDimensionsParamGroup.appendChild(levelDimensionsWidth);
+    levelDimensionsParamGroup.appendChild(levelDimensionsHeight);
 
-  controlsInner.appendChild(levelInterfaceContainer);
+    levelInterfaceContainer.appendChild(levelNoiseParamGroup);
+    levelInterfaceContainer.appendChild(levelDimensionsParamGroup);
+
+    // add level to wrapper
+    let levelsControl = document.querySelector("#levelsControl");
+
+    levelsControl.appendChild(levelInterfaceContainer);
+  }
+
+  document
+    .querySelector("#generateButton")
+    .addEventListener("click", () => generate());
+  document
+    .querySelector("#resolutionSelect")
+    .addEventListener("input", (e) => handleResolutionSelect(e));
+  document
+    .querySelector("#snapshotButton")
+    .addEventListener("click", () => snapshot());
+};
+
+let handleResolutionSelect = (e) => {
+  console.log(e);
+};
+
+let snapshot = () => {
+  saveCanvas(cnv, "dazzlegen_" + stringGen(6));
 };
 
 let generate = () => {
   background(255);
 
   glyphs = [];
+
+  console.log({ levels });
 
   glyphs.push(
     new Glyph()
