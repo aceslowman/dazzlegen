@@ -4,6 +4,7 @@ import { createParameterGroup, createParameterInput } from "./js/Interface.js";
 
 let glyphs;
 let cnv;
+let autoGenerate = false;
 
 /* output resolution when saving */
 let outputResolution = [128, 128];
@@ -13,7 +14,7 @@ let levels = [
   {
     glyphs: [],
     dim: [30, 30],
-    seed: Math.random() * 1000,
+    seed: Math.floor(Math.random() * 1000),
     noise: {
       scale: 0.1,
       steps: 8,
@@ -22,7 +23,7 @@ let levels = [
   {
     glyphs: [],
     dim: [3, 3],
-    seed: Math.random() * 1000,
+    seed: Math.floor(Math.random() * 1000),
     noise: {
       scale: 0.1,
       steps: 6,
@@ -51,12 +52,11 @@ let createInterface = () => {
   for (let i = 0; i < levels.length; i++) {
     // this creates a single level. shoudl be possible to add / remove
     let levelInterfaceContainer = document.createElement("fieldset");
-    levelInterfaceContainer.classList.add('levelGroup')
+    levelInterfaceContainer.classList.add("levelGroup");
 
     // level legend
     let levelLegend = document.createElement("legend");
     levelLegend.innerText = "lvl " + i;
-    levelInterfaceContainer.appendChild(levelLegend);
 
     // level noise param group
     let levelNoiseParamGroup = createParameterGroup("noise");
@@ -68,6 +68,7 @@ let createInterface = () => {
       levels[i].noise.scale,
       (e) => {
         levels[i].noise.scale = Number(e.target.value);
+        if (autoGenerate) generate();
       }
     );
 
@@ -77,12 +78,12 @@ let createInterface = () => {
       levels[i].noise.steps,
       (e) => {
         levels[i].noise.steps = Number(e.target.value);
+        if (autoGenerate) generate();
       }
     );
 
     // append to group
-    levelNoiseParamGroup.appendChild(levelNoiseScaleInput);
-    levelNoiseParamGroup.appendChild(levelNoiseStepInput);
+    levelNoiseParamGroup.append(levelNoiseScaleInput, levelNoiseStepInput);
 
     let levelDimensionsParamGroup = createParameterGroup("dimensions");
 
@@ -92,8 +93,8 @@ let createInterface = () => {
       "number",
       levels[0].dim[0],
       (e) => {
-        levels[i].dim[0] = e.target.value;
-        console.log("hello", levels[0].dim[0]);
+        levels[i].dim[0] = Number(e.target.value);
+        if (autoGenerate) generate();
       }
     );
 
@@ -102,37 +103,82 @@ let createInterface = () => {
       "number",
       levels[i].dim[1],
       (e) => {
-        levels[i].dim[1] = e.target.value;
-        console.log("hello", levels[0].dim[1]);
+        levels[i].dim[1] = Number(e.target.value);
+        if (autoGenerate) generate();
       }
     );
 
-    // append to group
-    levelDimensionsParamGroup.appendChild(levelDimensionsWidth);
-    levelDimensionsParamGroup.appendChild(levelDimensionsHeight);
+    // seed parameter
+    let seedParameter = createParameterInput(
+      "seed",
+      "number",
+      levels[i].seed,
+      (e) => {
+        levels[i].seed = Number(e.target.value);
+        if (autoGenerate) generate();
+      }
+    );
 
-    levelInterfaceContainer.appendChild(levelNoiseParamGroup);
-    levelInterfaceContainer.appendChild(levelDimensionsParamGroup);
+    // add randomizer button
+    let randButtonEle = document.createElement("button");
+    randButtonEle.innerText = "rand";
+    randButtonEle.addEventListener("click", () => {
+      randomizeLevel(i);
+    });
+
+    // append to group
+    levelDimensionsParamGroup.append(
+      levelDimensionsWidth,
+      levelDimensionsHeight
+    );
+
+    levelInterfaceContainer.append(
+      levelLegend,
+      randButtonEle,
+      levelNoiseParamGroup,
+      levelDimensionsParamGroup,
+      seedParameter
+    );
 
     // add level to wrapper
     let levelsControl = document.querySelector("#levelsControl");
-
     levelsControl.appendChild(levelInterfaceContainer);
   }
 
+  document
+    .querySelector("#randomizeAllButton")
+    .addEventListener("click", () => {});
+  document
+    .querySelector("#autoGenTick")
+    .addEventListener("input", (e) => (autoGenerate = e.target.checked));
   document
     .querySelector("#generateButton")
     .addEventListener("click", () => generate());
   document
     .querySelector("#resolutionSelect")
-    .addEventListener("input", (e) => handleResolutionSelect(e));
+    .addEventListener("input", (e) => console.log(e));
   document
     .querySelector("#snapshotButton")
     .addEventListener("click", () => snapshot());
 };
 
-let handleResolutionSelect = (e) => {
-  console.log(e);
+let randomizeLevel = (lvl_idx) => {
+  // glyphs: [],
+  // dim: [30, 30],
+  // seed: Math.floor(Math.random() * 1000),
+  // noise: {
+  //   scale: 0.1,
+  //   steps: 8,
+  // },
+
+        // randomize params in this level...
+      let thisLevel = levels[lvl_idx];
+
+      let newSeed = Math.floor(Math.random() * 1000);
+      seedParameter.querySelector("input").value = newSeed;
+      thisLevel.seed = newSeed;
+
+      if (autoGenerate) generate();
 };
 
 let snapshot = () => {
@@ -143,8 +189,6 @@ let generate = () => {
   background(255);
 
   glyphs = [];
-
-  console.log({ levels });
 
   glyphs.push(
     new Glyph()
@@ -160,8 +204,6 @@ let generate = () => {
   );
 
   glyphs[0].next((t, x, y, i) => next_func(t, x, y, i, 1));
-
-  // console.log({glyphs})
 };
 
 let next_func = (t, x, y, i, l) => {

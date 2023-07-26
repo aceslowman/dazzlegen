@@ -1,45 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <script src="js/libraries/p5.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0"
+    />
+    <title>dazzlegen</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
 
-<head>
-  <script src="js/libraries/p5.js"></script>
-  <link rel="stylesheet" type="text/css" href="style.css" />
-  <meta charset="utf-8" />
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
-  <title>dazzlegen</title>
-  <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-</head>
-
-<body>
-  <div id="container">
-    <div id="controls">
-      <div id="title">
-        <h1>dazzlegen</h1>
-        <div id="version">v 1.1</div>
-      </div>
-
+  <body>
+    <div id="container">
+      <div id="controls">
+        <div id="title">
+          <h1>dazzlegen</h1>
+          <div id="version">v 1.1</div>
+        </div>
 
         <div id="levelsControl"></div>
 
-      <div id="staticControl">
-        <button id="generateButton">generate</button>
-        <select id="resolutionSelect">
-          <option value="64">64x64</option>
-          <option value="128">128x128</option>
-          <option value="256">256x256</option>
-          <option value="512">512x512</option>
-          <option value="1024">1024x1024</option>
-        </select>
-        <button id="snapshotButton">snap</button>
+        <div id="staticControl">
+          <div>auto: <input id="autoGenTick" type="checkbox" /></div>
+          <button id="randomizeAllButton">randomize all</button>
+          <button id="generateButton">generate</button>
+          <select id="resolutionSelect">
+            <option value="64">64x64</option>
+            <option value="128">128x128</option>
+            <option value="256">256x256</option>
+            <option value="512">512x512</option>
+            <option value="1024">1024x1024</option>
+          </select>
+          <button id="snapshotButton">snap</button>
+        </div>
       </div>
+      <div id="workArea"></div>
     </div>
-    <div id="workArea"></div>
-  </div>
 
-  <script type="module" defer src="Main.js"></script>
-</body>
-
+    <script type="module" defer src="Main.js"></script>
+  </body>
 </html>

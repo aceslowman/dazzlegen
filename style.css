@@ -8,6 +8,10 @@ body,
   font-family: monospace;
 }
 
+canvas {
+  box-shadow: 7px 7px 7px 7px;
+}
+
 #version {
   color: white;
   background-color: black;
@@ -34,6 +38,7 @@ body,
 }
 
 #levelsControl {
+  border: 1px solid black;
   padding: 15px 0px;
   display: flex;
   flex-flow: row wrap;
@@ -77,8 +82,8 @@ body,
 }
 
 .levelParameter > div {
-  display:flex;
-  flex-flow:row wrap;
+  display: flex;
+  flex-flow: row wrap;
 }
 
 .levelParameter > fieldset {
