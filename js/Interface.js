@@ -12,6 +12,7 @@ let createParameterGroup = (legendText = "text") => {
 let createParameterInput = (
   paramLegendText = "text",
   paramType = "number",
+  idName = "id",
   paramDefaultValue = 0,
   eListener = () => {}
 ) => {
@@ -21,8 +22,10 @@ let createParameterInput = (
   paramLegend.innerText = paramLegendText;
 
   let paramInput = document.createElement("input");
+  paramInput.id = idName;
   paramInput.type = paramType;
   paramInput.value = paramDefaultValue;
+  paramInput.step = 0.1;
 
   paramInput.addEventListener("input", eListener);
 

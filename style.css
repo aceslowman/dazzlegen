@@ -24,12 +24,13 @@ canvas {
 }
 
 #controls {
-  width: 50%;
+  /* width: 50%; */
   display: flex;
   flex-flow: column;
   align-items: stretch;
   border: 2px dotted black;
   text-align: center;
+  flex-shrink: 2;
 }
 
 #title {
@@ -41,9 +42,9 @@ canvas {
   border: 1px solid black;
   padding: 15px 0px;
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: column;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   width: 100%;
   overflow-y: auto;
   flex-grow: 2;
@@ -63,6 +64,8 @@ canvas {
   align-self: center;
   align-items: center;
   justify-content: center;
+  flex-grow: 2;
+  overflow:hidden;
 }
 
 .inputGroup {

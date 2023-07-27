@@ -1,46 +1,53 @@
+import { createParameterGroup, createParameterInput } from "./Interface.js";
+import Glyph from "./Glyph.js";
+
 class Level {
-  constructor(idx = 0) {
+  constructor(
+    idx = 0,
+    dim = [30, 30],
+    seed = Math.floor(Math.random() * 1000),
+    noiseScale = 0.1,
+    noiseSteps = 6
+  ) {
     this.idx = idx;
     this.controls_ele = undefined;
     this.glyphs = [];
-    this.dim = [30, 30];
-    this.seed = Math.floor(Math.random() * 1000);
+    this.dim = dim;
+    this.seed = seed;
     this.noise = {
-      scale: 0.1,
-      steps: 8,
+      scale: noiseScale,
+      steps: noiseSteps,
     };
   }
 
-  setupInterface(){
-    // this creates a single level. shoudl be possible to add / remove
+  setupInterface() {
     this.controls_ele = document.createElement("fieldset");
     this.controls_ele.classList.add("levelGroup");
 
-    // level legend
     let levelLegend = document.createElement("legend");
-    levelLegend.innerText = "lvl " + i;
+    levelLegend.innerText = "lvl " + this.idx;
 
-    // level noise param group
     let levelNoiseParamGroup = createParameterGroup("noise");
 
-    // add scale param
     let levelNoiseScaleInput = createParameterInput(
       "scale",
       "number",
+      "levelNoiseScale_" + this.idx,
       this.noise.scale,
       (e) => {
         this.noise.scale = Number(e.target.value);
-        if (autoGenerate) generate();
+        if (window.autoGenerate) window.generate();
       }
     );
 
     let levelNoiseStepInput = createParameterInput(
       "step",
       "number",
+      "levelNoiseStep_" + this.idx,
       this.noise.steps,
       (e) => {
         this.noise.steps = Number(e.target.value);
-        if (autoGenerate) generate();
+        if (window.autoGenerate) window.generate();
       }
     );
 
@@ -53,6 +60,7 @@ class Level {
     let levelDimensionsWidth = createParameterInput(
       "width",
       "number",
+      "dimWidth_" + this.idx,
       this.dim[0],
       (e) => {
         this.dim[0] = Number(e.target.value);
@@ -63,6 +71,7 @@ class Level {
     let levelDimensionsHeight = createParameterInput(
       "height",
       "number",
+      "dimHeight_" + this.idx,
       this.dim[1],
       (e) => {
         this.dim[1] = Number(e.target.value);
@@ -74,10 +83,11 @@ class Level {
     let seedParameter = createParameterInput(
       "seed",
       "number",
+      "seed_" + this.idx,
       this.seed,
       (e) => {
         this.seed = Number(e.target.value);
-        if (autoGenerate) generate();
+        if (window.autoGenerate) window.generate();
       }
     );
 
@@ -104,15 +114,31 @@ class Level {
 
     // add level to wrapper
     let levelsControl = document.querySelector("#levelsControl");
-    levelsControl.appendChild(levelInterfaceContainer);
+    levelsControl.appendChild(this.controls_ele);
   }
 
   randomize() {
     this.seed = Math.floor(Math.random() * 1000);
-    this.controls_ele.querySelector("input").value = this.seed;
 
-    if (this.autoGenerate) this.generate();
+    let d = Math.floor(Math.random() * 100);
+    this.dim = [d, d];
+    this.noise = {
+      scale: Math.random() * 2,
+      steps: Math.floor(Math.random() * 30),
+    };
+
+    this.controls_ele.querySelector("#levelNoiseScale_" + this.idx).value =
+      this.noise.scale;
+    this.controls_ele.querySelector("#levelNoiseStep_" + this.idx).value =
+      this.noise.steps;
+    this.controls_ele.querySelector("#dimWidth_" + this.idx).value =
+      this.dim[0];
+    this.controls_ele.querySelector("#dimHeight_" + this.idx).value =
+      this.dim[1];
+    this.controls_ele.querySelector("#seed_" + this.idx).value = this.seed;
+
+    if (window.autoGenerate) window.generate();
   }
 }
 
-export default Level
+export default Level;

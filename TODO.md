@@ -1,10 +1,12 @@
 - [x] add seed parameter
 - [x] toggle for auto-generate
 - [x] Need to remove all react from this project
-- [-] add 100x100 option for dimensions
+- [x] add level randomizer
+- [x] add global randomizer
 - [ ] Move project to itch.io for better analytics and to get projects in one place
 - [ ] make it possible to add / remove levels 
-- [ ] drag on canvas to move different layers
-- [ ] add level randomizer
-- [ ] add global randomizer
 - [ ] should resize when window resizes
+- [ ] autogenerate should be remembered in session
+- [ ] each layer should render seperately (pg)
+- [ ] each layer interface has a corresponding preview of the layer
+- [ ] drag on canvas to move different layers
