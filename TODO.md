@@ -3,10 +3,10 @@
 - [x] Need to remove all react from this project
 - [x] add level randomizer
 - [x] add global randomizer
-- [ ] Move project to itch.io for better analytics and to get projects in one place
-- [ ] make it possible to add / remove levels 
-- [ ] should resize when window resizes
-- [ ] autogenerate should be remembered in session
+- [x] Move project to itch.io for better analytics and to get projects in one place
+- [x] make it possible to add / remove levels 
+- [x] should resize when window resizes
+- [x] autogenerate should be remembered in session
 - [ ] each layer should render seperately (pg)
 - [ ] each layer interface has a corresponding preview of the layer
 - [ ] drag on canvas to move different layers

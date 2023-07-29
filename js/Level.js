@@ -64,7 +64,7 @@ class Level {
       this.dim[0],
       (e) => {
         this.dim[0] = Number(e.target.value);
-        if (autoGenerate) generate();
+        if (window.autoGenerate) window.generate();
       }
     );
 
@@ -75,7 +75,7 @@ class Level {
       this.dim[1],
       (e) => {
         this.dim[1] = Number(e.target.value);
-        if (autoGenerate) generate();
+        if (window.autoGenerate) window.generate();
       }
     );
 

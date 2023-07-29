@@ -48,12 +48,16 @@ window.setup = async () => {
   colorMode(HSB, 255);
   background(255);
 
-  window.generate();
-
-  console.log({ levels, glyphs });
-
   setupInterface();
+
+  window.generate();
 };
+
+window.windowResized = () => {
+  window.workAreaBounds = workAreaElement.getBoundingClientRect();
+  resizeCanvas(window.workAreaBounds.width, window.workAreaBounds.width);
+  window.generate();
+}
 
 let setupInterface = () => {
   let levelsControl = document.querySelector("#levelsControl");
@@ -90,7 +94,7 @@ let setupInterface = () => {
 
   document
     .querySelector("#generateButton")
-    .addEventListener("click", () => generate());
+    .addEventListener("click", () => window.generate());
   document
     .querySelector("#resolutionSelect")
     .addEventListener("input", (e) => console.log(e));
@@ -131,7 +135,7 @@ let snapshot = () => {
 };
 
 let next_func = (t, x, y, i, l) => {
-  if (l <= 1) return;
+  // if (l <= 1) return;
 
   let w = t.width / t.x_dim;
   let h = t.height / t.y_dim;
