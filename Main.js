@@ -1,14 +1,15 @@
-import Glyph from "./js/Glyph.js";
 import { stringGen } from "./js/Utilities.js";
 import Level from "./js/Level.js";
+import Glyph from "./js/Glyph.js";
 
-let glyphs;
+
 let cnv;
 window.autoGenerate = false;
 
 /* output resolution when saving */
 let outputResolution = [128, 128];
 
+// let glyphs = [];
 let levels = [];
 
 window.workAreaElement = document.querySelector("#workArea");
@@ -16,6 +17,10 @@ window.workAreaBounds = workAreaElement.getBoundingClientRect();
 
 window.generate = () => {
   background(255);
+
+  /*  
+    level and glyph are being merged, so i don't know how to fix this method yet
+  */
 
   glyphs = [];
 
@@ -41,8 +46,32 @@ window.setup = async () => {
   cnv.parent("workArea");
 
   /* set up two default levels */
-  levels.push(new Level(0, [30, 30], Math.floor(Math.random() * 1000), 0.1, 8));
-  levels.push(new Level(1, [3, 3], Math.floor(Math.random() * 1000), 0.1, 6));
+
+  levels.push(new Level({
+    depth: 0,
+    dim: [30,30], 
+    size: [width,height],
+    seed: Math.floor(Math.random() * 1000),
+    anchor: [0,0],
+    noise: {scale: 0.1, step: 8},
+    stroke: 0,
+    fill: 0,
+    padding: [0,0],
+    margin: [0,0]
+  }))
+
+  levels.push(new Level({
+    depth: 1,
+    dim: [30,30], 
+    size: [width,height],
+    seed: Math.floor(Math.random() * 1000),
+    anchor: [0,0],
+    noise: {scale: 0.1, step: 6},
+    stroke: 0,
+    fill: 0,
+    padding: [0,0],
+    margin: [0,0]
+  }))
 
   smooth();
   colorMode(HSB, 255);

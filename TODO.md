@@ -10,3 +10,4 @@
 - [ ] each layer should render seperately (pg)
 - [ ] each layer interface has a corresponding preview of the layer
 - [ ] drag on canvas to move different layers
+- [ ] merge Level and Glyph
