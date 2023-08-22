@@ -9,7 +9,7 @@ body,
 }
 
 canvas {
-  box-shadow: 0px 0px 20px 0px;
+  box-shadow: 7px 7px 7px 7px;
 }
 
 #version {
@@ -24,7 +24,7 @@ canvas {
 }
 
 #controls {
-  max-width: 300px;
+  /* width: 50%; */
   display: flex;
   flex-flow: column;
   align-items: stretch;
@@ -34,10 +34,11 @@ canvas {
 }
 
 #title {
+  /* background-color: purple; */
   padding: 15px;
 }
 
-#layersControl {
+#levelsControl {
   border: 1px solid black;
   padding: 15px 0px;
   display: flex;
@@ -48,12 +49,6 @@ canvas {
   overflow-y: auto;
   flex-grow: 2;
   /* background-color: orange; */
-}
-
-.layerControl {
-  border: 1px solid black;
-  margin-bottom:15px;
-  box-shadow: 2px 2px 4px;
 }
 
 #staticControl {
@@ -73,33 +68,31 @@ canvas {
   overflow:hidden;
 }
 
-.flowVertical {
-  display: flex;
-  flex-flow: column;
-  padding: 5px;
-}
-
-.flowHorizontal {
+.inputGroup {
   display: flex;
   flex-flow: row;
-  padding: 2px;
+}
+
+.levelGroup {
+  margin-bottom: 15px;
+}
+
+.levelParameter {
+  display: flex;
+  flex-flow: wrap;
+  flex-direction: row;
   justify-content: center;
 }
 
-.paramGroup {
-  padding:2px;
-  margin: 2px;
-  border: 1px solid black;
+.levelParameter > div {
+  display: flex;
+  flex-flow: row wrap;
 }
 
-.inputGroup {
-  margin:5px;
+.levelParameter > fieldset {
+  border: 1px dashed gray;
 }
 
-.inputGroup input {
-  max-width: 50px;
-}
-
-#layerControlTemplate {
-  display: none;
+.levelParameter > fieldset > input {
+  width: 50px;
 }
