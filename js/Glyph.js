@@ -26,7 +26,7 @@ export default class Glyph {
 
         if (this.noiseParams.steps !== undefined) {
           cell =
-            floor(cell * (this.noiseParams.steps + 1)) /
+            Math.floor(cell * (this.noiseParams.steps + 1)) /
             (this.noiseParams.steps - 1);
         }
 
@@ -57,17 +57,20 @@ export default class Glyph {
         pos_y += this.anchor.y;
 
         this.stroke_color !== undefined
-          ? pg.stroke(this.stroke_color)
+          ? pg.stroke(color(this.stroke_color), this.cells[i] > 0.5 ? 255 : 0)
           : pg.noStroke();
         this.fill_color !== undefined
-          ? pg.fill(this.fill_color, this.cells[i] > 0.5 ? 255 : 0)
+          ? pg.fill(color(this.fill_color), this.cells[i] > 0.5 ? 255 : 0)
           : pg.noFill();
 
+        /* NOTE: Revisit this, color doesn't really make sense in the way it's set up here */
+        if(this.cells[i] > 0.5 ? 255 : 0) pg.fill(255)
+
         pg.rect(
-          floor(pos_x),
-          floor(pos_y),
-          ceil(this.size.width / this.dim.x),
-          ceil(this.size.height / this.dim.y)
+          Math.floor(pos_x),
+          Math.floor(pos_y),
+          Math.ceil(this.size.width / this.dim.x),
+          Math.ceil(this.size.height / this.dim.y)
         );
 
         // debug numbers

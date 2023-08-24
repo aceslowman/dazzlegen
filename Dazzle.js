@@ -26,6 +26,8 @@ layers = [
     },
     margin: { x: 0, y: 0 },
     padding: { x: 0, y: 0 },
+    fill_color: "black",
+    stroke_color: undefined,
   },
   {
     glyphs: [],
@@ -37,6 +39,8 @@ layers = [
     },
     margin: { x: 0, y: 0 },
     padding: { x: 0, y: 0 },
+    fill_color: "black",
+    stroke_color: undefined,
   },
 ];
 
@@ -102,10 +106,10 @@ let generate = () => {
         scale: layers[0].noise.scale,
         steps: layers[0].noise.steps, // REVISIT
       },
-      stroke_color: undefined,
-      fill_color: layers[0].seed * 255,
-      padding: { x: 0, y: 0 },
-      margin: { x: 0, y: 0 },
+      stroke_color: layers[0].stroke_color,
+      fill_color: layers[0].fill_color,
+      padding: { ...layers[0].padding },
+      margin: { ...layers[0].margin },
     })
   );
 
@@ -138,10 +142,10 @@ let next_func = (t, x, y, i, l) => {
       scale: layers[l].noise.scale,
       steps: layers[l].noise.steps, // REVISIT
     },
-    stroke_color: undefined,
-    fill_color: 0,
-    padding: { x: 0, y: 0 },
-    margin: { x: 0, y: 0 },
+    stroke_color: layers[l].stroke_color,
+    fill_color: layers[l].fill_color,
+    padding: { x: layers[l].padding.x, y: layers[l].padding.y },
+    margin: { x: layers[l].margin.x, y: layers[l].margin.y },
   });
 
   glyph.noise();
@@ -208,6 +212,7 @@ const setupInterface = () => {
       padding: { x: 0, y: 0 },
     });
     setupInterface();
+    if (bAutoGenerate) generate();
   });
 
   /* remove level */
@@ -216,6 +221,7 @@ const setupInterface = () => {
     .addEventListener("click", (e) => {
       layers.pop();
       setupInterface();
+      if (bAutoGenerate) generate();
     });
 
   /* snapshot */
@@ -257,6 +263,21 @@ const setupInterface = () => {
     layerControl.id = "layer_" + i;
 
     layerControl.querySelector(".layerLabel").innerText = "layer_" + i;
+
+    layerControl.querySelector(".fillColor").addEventListener("input", (e) => {
+      let v = e.target.value;
+      layer.fill_color = v;
+      console.log(v);
+      if (bAutoGenerate) generate();
+    });
+
+    layerControl
+      .querySelector(".strokeColor")
+      .addEventListener("input", (e) => {
+        let v = e.target.value;
+        layer.stroke_color = v;
+        if (bAutoGenerate) generate();
+      });
 
     /* dim */
     layerControl.querySelector(".dimX input").value = layer.dim.x;
