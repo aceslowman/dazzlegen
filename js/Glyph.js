@@ -12,6 +12,7 @@ export default class Glyph {
     this.noiseParams = options.noise;
   }
 
+  // this is the big performance bottleneck
   noise() {
     /* set seed for random generation */
     noiseSeed(this.seed);
@@ -31,14 +32,6 @@ export default class Glyph {
         }
 
         this.cells.push(cell);
-      }
-    }
-  }
-
-  next(f) {
-    for (let _x = 0, i = 0; _x < this.dim.x; _x++) {
-      for (let _y = 0; _y < this.dim.y; _y++, i++) {
-        f(this, _x, _y, i); //move to draw
       }
     }
   }
@@ -64,7 +57,7 @@ export default class Glyph {
           : pg.noFill();
 
         /* NOTE: Revisit this, color doesn't really make sense in the way it's set up here */
-        if(this.cells[i] > 0.5 ? 255 : 0) pg.fill(255)
+        if (this.cells[i] > 0.5 ? 255 : 0) pg.fill(255);
 
         pg.rect(
           Math.floor(pos_x),
