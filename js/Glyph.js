@@ -12,7 +12,6 @@ export default class Glyph {
     this.noiseParams = options.noise;
   }
 
-  // this is the big performance bottleneck
   noise() {
     /* set seed for random generation */
     noiseSeed(this.seed);
@@ -57,28 +56,6 @@ export default class Glyph {
           img,
           color(this.cells[i] > 0.5 ? "white" : "black")
         );
-        // set colors with pos_x, pos_y, this.size.width / this.dim.x
-
-        // this.stroke_color !== undefined
-        //   ? pg.stroke(color(this.stroke_color), this.cells[i] > 0.5 ? 255 : 0)
-        //   : pg.noStroke();
-        // this.fill_color !== undefined
-        //   ? pg.fill(color(this.fill_color), this.cells[i] > 0.5 ? 255 : 0)
-        //   : pg.noFill();
-
-        /* NOTE: Revisit this, color doesn't really make sense in the way it's set up here */
-        // if (this.cells[i] > 0.5 ? 255 : 0) pg.fill(255);
-
-        // pg.rect(
-        //   Math.floor(pos_x),
-        //   Math.floor(pos_y),
-        //   Math.ceil(this.size.width / this.dim.x),
-        //   Math.ceil(this.size.height / this.dim.y)
-        // );
-
-        // debug numbers
-        // fill(128)
-        // text(this.cells[i].toFixed(2),pos_x+(this.height / this.x_dim)/2,pos_y+(this.height / this.y_dim)/2);
       }
     }
   }

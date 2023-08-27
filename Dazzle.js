@@ -2,7 +2,8 @@
     - [x] layers are now layers
     - [x] glyphs should be a member of layers
     - [x] get rid of method chaining?
-    - [ ] instead of drawing rectangles do this with one image and a large array
+    - [x] instead of drawing rectangles do this with one image and a large array
+    - [x] after clicking randomize all the user interface elements do not work
  */
 
 import { stringGen } from "./js/Utilities.js";
@@ -18,7 +19,6 @@ let cnv, outputimg;
 /* describes the behavior of each successive layer */
 layers = [
   {
-    glyphs: [],
     dim: { x: 30, y: 30 },
     seed: Math.floor(Math.random() * 1000),
     noise: {
@@ -31,7 +31,6 @@ layers = [
     stroke_color: undefined,
   },
   {
-    glyphs: [],
     dim: { x: 3, y: 3 },
     seed: Math.floor(Math.random() * 1000),
     noise: {
@@ -85,9 +84,9 @@ window.windowResized = () => {
 };
 
 let generate = () => {
-  outputimg = createImage(window.workAreaBounds.width, window.workAreaBounds.width);  
+  outputimg = createImage(outputimg.width, outputimg.width);  
   outputimg.loadPixels();
-  background(255);
+  clear();
 
   glyphs = [];
 
@@ -161,7 +160,6 @@ let generate = () => {
         glyph.noise();
         glyph.draw(outputimg);
 
-        // (previous glyph, x coord, y coord, cell index)
         glyphs.push(glyph);
 
         if (l < layers.length - 1) {
@@ -182,21 +180,15 @@ const randomizeAll = () => {
     let layer = layers[i];
     let layerControl = document.querySelector("#layer_" + i);
 
-    layers[i] = {
-      ...layer,
-      glyphs: [],
-      dim: {
-        x: Math.floor(Math.random() * 50),
-        y: Math.floor(Math.random() * 50),
-      },
-      seed: Math.floor(Math.random() * 1000),
-      noise: {
-        scale: Math.random() * 5,
-        steps: Math.random() * 5,
-      },
-      margin: { x: Math.random(), y: Math.random() },
-      padding: { x: Math.random(), y: Math.random() },
-    };
+    layers[i].dim.x = Math.floor(Math.random() * 50);
+    layers[i].dim.y = Math.floor(Math.random() * 50);
+    layers[i].seed = Math.floor(Math.random() * 1000);
+    layers[i].noise.scale = Math.random() * 5
+    layers[i].noise.steps = Math.random() * 5
+    layers[i].margin.x = Math.random();
+    layers[i].margin.y = Math.random();
+    layers[i].padding.x = Math.random();
+    layers[i].padding.y = Math.random();
 
     layerControl.querySelector(".dimX input").value = layer.dim.x;
     layerControl.querySelector(".dimY input").value = layer.dim.y;
@@ -248,7 +240,8 @@ const setupInterface = () => {
 
   /* dimension select */
   document.querySelector("#resolutionSelect").addEventListener("input", (e) => {
-    outputimg = createImage(window.workAreaBounds.width, window.workAreaBounds.width);
+    console.log(e.target.value)
+    outputimg.resize(Number(e.target.value),Number(e.target.value));
     if (bAutoGenerate) generate();
   });
   /* TODO load from local storage */
