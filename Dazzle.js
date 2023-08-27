@@ -2,6 +2,7 @@
     - [x] layers are now layers
     - [x] glyphs should be a member of layers
     - [x] get rid of method chaining?
+    - [ ] instead of drawing rectangles do this with one image and a large array
  */
 
 import { stringGen } from "./js/Utilities.js";
@@ -12,7 +13,7 @@ let layers;
 
 let bAutoGenerate = false;
 
-let cnv, pg;
+let cnv, outputimg;
 
 /* describes the behavior of each successive layer */
 layers = [
@@ -55,18 +56,19 @@ window.setup = () => {
   cnv = createCanvas(s - 30, s - 30);
   cnv.parent("workArea");
 
-  /* graphics are drawn to pg and are resampled for the main canvas */
-  pg = createGraphics(window.workAreaBounds.width, window.workAreaBounds.width);
   let ctx = cnv.canvas.getContext("2d");
   ctx.mozImageSmoothingEnabled = false;
   ctx.webkitImageSmoothingEnabled = false;
   ctx.msImageSmoothingEnabled = false;
   ctx.imageSmoothingEnabled = false;
 
-  colorMode(HSB, 255);
+  // instead of using the pg, create one image and edit it's pixels
+  outputimg = createImage(window.workAreaBounds.width, window.workAreaBounds.width);
+
+  // colorMode(HSB, 255);
   background(255);
 
-  generateIterative();
+  generate();
 
   setupInterface();
 };
@@ -79,12 +81,13 @@ window.windowResized = () => {
       ? window.workAreaBounds.height
       : window.workAreaBounds.width;
   resizeCanvas(s - 30, s - 30);
-  image(pg, 0, 0, width, height);
+  image(outputimg, 0, 0, width, height);
 };
 
-let generateIterative = () => {
+let generate = () => {
+  outputimg = createImage(window.workAreaBounds.width, window.workAreaBounds.width);  
+  outputimg.loadPixels();
   background(255);
-  pg.background(255);
 
   glyphs = [];
 
@@ -98,13 +101,13 @@ let generateIterative = () => {
         ...layers[0].dim,
       },
       size: {
-        width: pg.width,
-        height: pg.height,
+        width: outputimg.width,
+        height: outputimg.height,
       },
       seed: layers[0].seed,
       noise: {
         scale: layers[0].noise.scale,
-        steps: layers[0].noise.steps, // REVISIT
+        steps: layers[0].noise.steps,
       },
       stroke_color: layers[0].stroke_color,
       fill_color: layers[0].fill_color,
@@ -114,9 +117,9 @@ let generateIterative = () => {
   );
 
   glyphs[0].noise();
-  glyphs[0].draw(pg);
+  glyphs[0].draw(outputimg);
 
-  let l = 0;
+  let l = 1;
 
   let stack = [];
   stack.push(glyphs[0]);
@@ -156,7 +159,7 @@ let generateIterative = () => {
         });
 
         glyph.noise();
-        glyph.draw(pg);
+        glyph.draw(outputimg);
 
         // (previous glyph, x coord, y coord, cell index)
         glyphs.push(glyph);
@@ -169,7 +172,9 @@ let generateIterative = () => {
     }
   }
 
-  image(pg, 0, 0, width, height);
+  outputimg.updatePixels();
+
+  image(outputimg, 0, 0, width, height);
 };
 
 const randomizeAll = () => {
@@ -204,7 +209,7 @@ const randomizeAll = () => {
     layerControl.querySelector(".noiseSteps input").value = layer.noise.steps;
   }
 
-  if (bAutoGenerate) generateIterative();
+  if (bAutoGenerate) generate();
 };
 
 const setupInterface = () => {
@@ -224,7 +229,7 @@ const setupInterface = () => {
       padding: { x: 0, y: 0 },
     });
     setupInterface();
-    if (bAutoGenerate) generateIterative();
+    if (bAutoGenerate) generate();
   });
 
   /* remove level */
@@ -233,7 +238,7 @@ const setupInterface = () => {
     .addEventListener("click", (e) => {
       layers.pop();
       setupInterface();
-      if (bAutoGenerate) generateIterative();
+      if (bAutoGenerate) generate();
     });
 
   /* snapshot */
@@ -243,8 +248,8 @@ const setupInterface = () => {
 
   /* dimension select */
   document.querySelector("#resolutionSelect").addEventListener("input", (e) => {
-    pg = createGraphics(Number(e.target.value), Number(e.target.value));
-    if (bAutoGenerate) generateIterative();
+    outputimg = createImage(window.workAreaBounds.width, window.workAreaBounds.width);
+    if (bAutoGenerate) generate();
   });
   /* TODO load from local storage */
   document.querySelector("#resolutionSelect").value = 512;
@@ -258,7 +263,7 @@ const setupInterface = () => {
 
   /* .generate */
   document.querySelector("#generateButton").addEventListener("click", (e) => {
-    generateIterative();
+    generate();
   });
 
   /* auto generate */
@@ -280,7 +285,7 @@ const setupInterface = () => {
       let v = e.target.value;
       layer.fill_color = v;
       console.log(v);
-      if (bAutoGenerate) generateIterative();
+      if (bAutoGenerate) generate();
     });
 
     layerControl
@@ -288,7 +293,7 @@ const setupInterface = () => {
       .addEventListener("input", (e) => {
         let v = e.target.value;
         layer.stroke_color = v;
-        if (bAutoGenerate) generateIterative();
+        if (bAutoGenerate) generate();
       });
 
     /* dim */
@@ -296,14 +301,14 @@ const setupInterface = () => {
     layerControl.querySelector(".dimX input").addEventListener("input", (e) => {
       let v = Number(e.target.value);
       layer.dim.x = v;
-      if (bAutoGenerate) generateIterative();
+      if (bAutoGenerate) generate();
     });
 
     layerControl.querySelector(".dimY input").value = layer.dim.y;
     layerControl.querySelector(".dimY input").addEventListener("input", (e) => {
       let v = Number(e.target.value);
       layer.dim.y = v;
-      if (bAutoGenerate) generateIterative();
+      if (bAutoGenerate) generate();
     });
 
     /* margin */
@@ -313,7 +318,7 @@ const setupInterface = () => {
       .addEventListener("input", (e) => {
         let v = Number(e.target.value);
         layer.margin.x = v;
-        if (bAutoGenerate) generateIterative();
+        if (bAutoGenerate) generate();
       });
 
     layerControl.querySelector(".marginY input").value = layer.margin.y;
@@ -322,7 +327,7 @@ const setupInterface = () => {
       .addEventListener("input", (e) => {
         let v = Number(e.target.value);
         layer.margin.y = v;
-        if (bAutoGenerate) generateIterative();
+        if (bAutoGenerate) generate();
       });
 
     /* padding */
@@ -332,7 +337,7 @@ const setupInterface = () => {
       .addEventListener("input", (e) => {
         let v = Number(e.target.value);
         layer.padding.x = v;
-        if (bAutoGenerate) generateIterative();
+        if (bAutoGenerate) generate();
       });
 
     layerControl.querySelector(".paddingY input").value = layer.padding.y;
@@ -341,7 +346,7 @@ const setupInterface = () => {
       .addEventListener("input", (e) => {
         let v = Number(e.target.value);
         layer.padding.y = v;
-        if (bAutoGenerate) generateIterative();
+        if (bAutoGenerate) generate();
       });
 
     /* seed */
@@ -349,7 +354,7 @@ const setupInterface = () => {
     layerControl.querySelector(".seed input").addEventListener("input", (e) => {
       let v = Number(e.target.value);
       layer.seed = v;
-      if (bAutoGenerate) generateIterative();
+      if (bAutoGenerate) generate();
     });
 
     /* noise scale */
@@ -359,7 +364,7 @@ const setupInterface = () => {
       .addEventListener("input", (e) => {
         let v = Number(e.target.value);
         layer.noise.scale = v;
-        if (bAutoGenerate) generateIterative();
+        if (bAutoGenerate) generate();
       });
 
     /* noise steps */
@@ -369,7 +374,7 @@ const setupInterface = () => {
       .addEventListener("input", (e) => {
         let v = Number(e.target.value);
         layer.noise.steps = v;
-        if (bAutoGenerate) generateIterative();
+        if (bAutoGenerate) generate();
       });
 
     document.querySelector("#layersControl").appendChild(layerControl);
@@ -377,5 +382,5 @@ const setupInterface = () => {
 };
 
 const snapshot = () => {
-  saveCanvas(pg, "dazzlegen_" + stringGen(6));
+  outputimg.save("dazzlegen_" + stringGen(6), 'png');
 };
