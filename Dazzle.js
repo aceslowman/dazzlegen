@@ -4,7 +4,7 @@
     - [x] get rid of method chaining?
     - [x] instead of drawing rectangles do this with one image and a large array
     - [x] after clicking randomize all the user interface elements do not work
-    - [ ] add functionality to input elements allowing for easier adjustable drag
+    - [x] add functionality to input elements allowing for easier adjustable drag
     - [ ] fix padding on levels (greater than 1)
  */
 
@@ -47,7 +47,7 @@ layers = [
 
 window.setup = () => {
   window.workAreaElement = document.querySelector("#workArea");
-  window.workAreaBounds = workAreaElement.getBoundingClientRect();
+  window.workAreaBounds = window.workAreaElement.getBoundingClientRect();
   let s =
     window.workAreaBounds.width > window.workAreaBounds.height
       ? window.workAreaBounds.height

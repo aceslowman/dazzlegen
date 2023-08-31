@@ -72,7 +72,6 @@ let createAdjustableNumberInput = (ele, cb, min, max, isInt = false) => {
         ele.value = Math.floor(ele.value);
       }
 
-      console.log(ele.value);
       // cb(Number(ele.value))
     };
 
