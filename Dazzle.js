@@ -4,10 +4,13 @@
     - [x] get rid of method chaining?
     - [x] instead of drawing rectangles do this with one image and a large array
     - [x] after clicking randomize all the user interface elements do not work
+    - [ ] add functionality to input elements allowing for easier adjustable drag
+    - [ ] fix padding on levels (greater than 1)
  */
 
 import { stringGen } from "./js/Utilities.js";
 import Glyph from "./js/Glyph.js";
+import { createAdjustableNumberInput } from "./js/Interface.js";
 
 let glyphs = [];
 let layers;
@@ -25,7 +28,6 @@ layers = [
       scale: 0.1,
       steps: 8,
     },
-    margin: { x: 0, y: 0 },
     padding: { x: 0, y: 0 },
     fill_color: "black",
     stroke_color: undefined,
@@ -37,7 +39,6 @@ layers = [
       scale: 0.1,
       steps: 6,
     },
-    margin: { x: 0, y: 0 },
     padding: { x: 0, y: 0 },
     fill_color: "black",
     stroke_color: undefined,
@@ -62,10 +63,10 @@ window.setup = () => {
   ctx.imageSmoothingEnabled = false;
 
   // instead of using the pg, create one image and edit it's pixels
-  outputimg = createImage(window.workAreaBounds.width, window.workAreaBounds.width);
-
-  // colorMode(HSB, 255);
-  background(255);
+  outputimg = createImage(
+    window.workAreaBounds.width,
+    window.workAreaBounds.width
+  );
 
   generate();
 
@@ -84,7 +85,7 @@ window.windowResized = () => {
 };
 
 let generate = () => {
-  outputimg = createImage(outputimg.width, outputimg.width);  
+  outputimg = createImage(outputimg.width, outputimg.width);
   outputimg.loadPixels();
   clear();
 
@@ -111,7 +112,6 @@ let generate = () => {
       stroke_color: layers[0].stroke_color,
       fill_color: layers[0].fill_color,
       padding: { ...layers[0].padding },
-      margin: { ...layers[0].margin },
     })
   );
 
@@ -149,12 +149,11 @@ let generate = () => {
           seed: layers[l].seed + t.cells[i],
           noise: {
             scale: layers[l].noise.scale,
-            steps: layers[l].noise.steps, // REVISIT
+            steps: layers[l].noise.steps,
           },
           stroke_color: layers[l].stroke_color,
           fill_color: layers[l].fill_color,
           padding: { x: layers[l].padding.x, y: layers[l].padding.y },
-          margin: { x: layers[l].margin.x, y: layers[l].margin.y },
         });
 
         glyph.noise();
@@ -180,20 +179,16 @@ const randomizeAll = () => {
     let layer = layers[i];
     let layerControl = document.querySelector("#layer_" + i);
 
-    layers[i].dim.x = Math.floor(Math.random() * 50);
-    layers[i].dim.y = Math.floor(Math.random() * 50);
-    layers[i].seed = Math.floor(Math.random() * 1000);
-    layers[i].noise.scale = Math.random() * 5
-    layers[i].noise.steps = Math.random() * 5
-    layers[i].margin.x = Math.random();
-    layers[i].margin.y = Math.random();
-    layers[i].padding.x = Math.random();
-    layers[i].padding.y = Math.random();
+    layer.dim.x = Math.floor(Math.random() * 10);
+    layer.dim.y = Math.floor(Math.random() * 10);
+    layer.seed = Math.floor(Math.random() * 1000);
+    layer.noise.scale = Math.random() * 3;
+    layer.noise.steps = Math.floor(Math.random() * 3);
+    layer.padding.x = Math.floor(Math.random() * 10);
+    layer.padding.y = Math.floor(Math.random() * 10);
 
     layerControl.querySelector(".dimX input").value = layer.dim.x;
     layerControl.querySelector(".dimY input").value = layer.dim.y;
-    layerControl.querySelector(".marginX input").value = layer.margin.x;
-    layerControl.querySelector(".marginY input").value = layer.margin.y;
     layerControl.querySelector(".paddingX input").value = layer.padding.x;
     layerControl.querySelector(".paddingY input").value = layer.padding.y;
     layerControl.querySelector(".seed input").value = layer.seed;
@@ -217,7 +212,6 @@ const setupInterface = () => {
         scale: 0.1,
         steps: 6,
       },
-      margin: { x: 0, y: 0 },
       padding: { x: 0, y: 0 },
     });
     setupInterface();
@@ -240,12 +234,21 @@ const setupInterface = () => {
 
   /* dimension select */
   document.querySelector("#resolutionSelect").addEventListener("input", (e) => {
-    console.log(e.target.value)
-    outputimg.resize(Number(e.target.value),Number(e.target.value));
+    /* save to local storage */
+    window.localStorage.setItem("output_resolution", Number(e.target.value));
+    outputimg.resize(Number(e.target.value), Number(e.target.value));
     if (bAutoGenerate) generate();
   });
-  /* TODO load from local storage */
-  document.querySelector("#resolutionSelect").value = 512;
+
+  /* load from local storage */
+  if (window.localStorage.getItem("output_resolution")) {
+    document.querySelector("#resolutionSelect").value = Number(
+      window.localStorage.getItem("output_resolution")
+    );
+  } else {
+    /* set default */
+    document.querySelector("#resolutionSelect").value = 512;
+  }
 
   /* .randomize all */
   document
@@ -260,9 +263,15 @@ const setupInterface = () => {
   });
 
   /* auto generate */
+  if (window.localStorage.getItem("bAutoGenerate")) {
+    bAutoGenerate = Boolean(window.localStorage.getItem("bAutoGenerate"));
+  } else {
+    bAutoGenerate = false;
+  }
   document.querySelector("#autoGenTick").checked = bAutoGenerate;
   document.querySelector("#autoGenTick").addEventListener("input", (e) => {
     bAutoGenerate = Boolean(e.target.checked);
+    window.localStorage.setItem("bAutoGenerate", bAutoGenerate);
   });
 
   for (let i = 0; i < layers.length; i++) {
@@ -272,64 +281,53 @@ const setupInterface = () => {
       .cloneNode(true);
     layerControl.id = "layer_" + i;
 
-    layerControl.querySelector(".layerLabel").innerText = "layer_" + i;
+    layerControl.querySelector(".layerLabel").innerText = "layer #" + (i + 1);
 
     layerControl.querySelector(".fillColor").addEventListener("input", (e) => {
-      let v = e.target.value;
-      layer.fill_color = v;
-      console.log(v);
+      layer.fill_color = e.target.value;
       if (bAutoGenerate) generate();
     });
 
     layerControl
       .querySelector(".strokeColor")
       .addEventListener("input", (e) => {
-        let v = e.target.value;
-        layer.stroke_color = v;
+        layer.stroke_color = e.target.value;
         if (bAutoGenerate) generate();
       });
 
     /* dim */
     layerControl.querySelector(".dimX input").value = layer.dim.x;
-    layerControl.querySelector(".dimX input").addEventListener("input", (e) => {
-      let v = Number(e.target.value);
-      layer.dim.x = v;
-      if (bAutoGenerate) generate();
-    });
+    /* bind the variable input thing */
+    createAdjustableNumberInput(
+      layerControl.querySelector(".dimX input"),
+      (v) => {
+        layer.dim.x = v;
+        if (bAutoGenerate) generate();
+      },
+      0.0,
+      undefined,
+      true
+    );
 
     layerControl.querySelector(".dimY input").value = layer.dim.y;
-    layerControl.querySelector(".dimY input").addEventListener("input", (e) => {
-      let v = Number(e.target.value);
-      layer.dim.y = v;
-      if (bAutoGenerate) generate();
-    });
-
-    /* margin */
-    layerControl.querySelector(".marginX input").value = layer.margin.x;
-    layerControl
-      .querySelector(".marginX input")
-      .addEventListener("input", (e) => {
-        let v = Number(e.target.value);
-        layer.margin.x = v;
+    /* bind the variable input thing */
+    createAdjustableNumberInput(
+      layerControl.querySelector(".dimY input"),
+      (v) => {
+        layer.dim.y = v;
         if (bAutoGenerate) generate();
-      });
-
-    layerControl.querySelector(".marginY input").value = layer.margin.y;
-    layerControl
-      .querySelector(".marginY input")
-      .addEventListener("input", (e) => {
-        let v = Number(e.target.value);
-        layer.margin.y = v;
-        if (bAutoGenerate) generate();
-      });
+      },
+      0.0,
+      undefined,
+      true
+    );
 
     /* padding */
     layerControl.querySelector(".paddingX input").value = layer.padding.x;
     layerControl
       .querySelector(".paddingX input")
       .addEventListener("input", (e) => {
-        let v = Number(e.target.value);
-        layer.padding.x = v;
+        layer.padding.x = Number(e.target.value);
         if (bAutoGenerate) generate();
       });
 
@@ -337,8 +335,7 @@ const setupInterface = () => {
     layerControl
       .querySelector(".paddingY input")
       .addEventListener("input", (e) => {
-        let v = Number(e.target.value);
-        layer.padding.y = v;
+        layer.padding.y = Number(e.target.value);
         if (bAutoGenerate) generate();
       });
 
@@ -355,8 +352,7 @@ const setupInterface = () => {
     layerControl
       .querySelector(".noiseScale input")
       .addEventListener("input", (e) => {
-        let v = Number(e.target.value);
-        layer.noise.scale = v;
+        layer.noise.scale = Number(e.target.value);
         if (bAutoGenerate) generate();
       });
 
@@ -365,8 +361,7 @@ const setupInterface = () => {
     layerControl
       .querySelector(".noiseSteps input")
       .addEventListener("input", (e) => {
-        let v = Number(e.target.value);
-        layer.noise.steps = v;
+        layer.noise.steps = Number(e.target.value);
         if (bAutoGenerate) generate();
       });
 
@@ -375,5 +370,5 @@ const setupInterface = () => {
 };
 
 const snapshot = () => {
-  outputimg.save("dazzlegen_" + stringGen(6), 'png');
+  outputimg.save("dazzlegen_" + stringGen(6), "png");
 };

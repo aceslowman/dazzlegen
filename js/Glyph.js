@@ -6,7 +6,6 @@ export default class Glyph {
     this.dim = options.dim;
     this.anchor = options.anchor;
     this.padding = options.padding;
-    this.margin = options.margin;
     this.stroke_color = options.stroke_color;
     this.fill_color = options.fill_color;
     this.noiseParams = options.noise;

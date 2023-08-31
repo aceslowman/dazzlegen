@@ -24,7 +24,6 @@
 
         <div id="layersControl">
           <!-- this is copied in Dazzle.js -->
-          
         </div>
 
         <div id="layerControlTemplate" class="layerControl">
@@ -34,23 +33,13 @@
               <label>dim</label>
               <div class="flowHorizontal">
                 <div class="inputGroup dimX">
-                  <label>x</label> <input type="number" step="1"/>
+                  <input type="number" step="1" min="0.0" />
                 </div>
+                <div  class="inputGroup">x</div>
                 <div class="inputGroup dimY">
-                  <label>y</label> <input type="number" step="1"/>
+                  <input type="number" step="1" min="0.0" />
                 </div>
-              </div>
-            </div>
-
-            <div class="paramGroup">
-              <label>margin</label>
-              <div class="flowHorizontal">
-                <div class="inputGroup marginX">
-                  <label>x</label> <input type="number" step="0.1"/>
-                </div>
-                <div class="inputGroup marginY">
-                  <label>y</label> <input type="number" step="0.1"/>
-                </div>
+                <div  class="inputGroup">cells</div>
               </div>
             </div>
 
@@ -58,10 +47,10 @@
               <label>padding</label>
               <div class="flowHorizontal">
                 <div class="inputGroup paddingX">
-                  <label>x</label> <input type="number" step="0.1"/>
+                  <label>x</label> <input type="number" step="0.1" />
                 </div>
                 <div class="inputGroup paddingY">
-                  <label>y</label> <input type="number" step="0.1"/>
+                  <label>y</label> <input type="number" step="0.1" />
                 </div>
               </div>
             </div>
@@ -70,10 +59,10 @@
               <label>noise</label>
               <div class="flowHorizontal">
                 <div class="inputGroup noiseScale">
-                  <label>scale</label> <input type="number" step="0.1"/>
+                  <label>scale</label> <input type="number" step="0.1" />
                 </div>
                 <div class="inputGroup noiseSteps">
-                  <label>steps</label> <input type="number" step="1"/>
+                  <label>steps</label> <input type="number" step="1" />
                 </div>
               </div>
             </div>
@@ -82,17 +71,17 @@
               <label>color</label>
               <div class="flowHorizontal">
                 <div class="inputGroup fillColor">
-                  <label>fill</label> <input type="color"/>
+                  <label>fill</label> <input type="color" />
                 </div>
                 <div class="inputGroup strokeColor">
-                  <label>stroke</label> <input type="color"/>
+                  <label>stroke</label> <input type="color" />
                 </div>
               </div>
             </div>
 
             <div class="paramGroup">
               <div class="inputGroup seed">
-                <label>seed</label> <input type="number" step="1"/>
+                <label>seed</label> <input type="number" step="1" />
               </div>
             </div>
           </div>
