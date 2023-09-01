@@ -43,10 +43,10 @@
           </div>
 
           <div id="layerControlTemplate" class="layerControl">
-            <h3 class="layerLabel">placeholder</h3>
+            <div class="paramLabelRow"><label><h3 class="layerLabel">placeholder</h3></label><button class="randomButton specialSymbol">⚄</button></div>
             <div class="flowVertical">
-              <div class="paramGroup">
-                <label>dim</label>
+              <div class="paramGroup dim">
+                <div class="paramLabelRow"><label>dim</label><button class="randomButton specialSymbol">⚄</button></div>
                 <div class="flowHorizontal">
                   <div class="inputGroup dimX">
                     <input type="number" step="1" min="0.0" />
@@ -59,7 +59,7 @@
                 </div>
               </div>
 
-              <div class="paramGroup">
+              <!-- <div class="paramGroup">
                 <label>padding</label>
                 <div class="flowHorizontal">
                   <div class="inputGroup paddingX">
@@ -69,10 +69,10 @@
                     <label>y</label> <input type="number" step="0.1" />
                   </div>
                 </div>
-              </div>
+              </div> -->
 
-              <div class="paramGroup">
-                <label>noise</label>
+              <div class="paramGroup noise">
+                <div class="paramLabelRow"><label>noise</label><button class="randomButton specialSymbol">⚄</button></div>
                 <div class="flowHorizontal">
                   <div class="inputGroup noiseScale">
                     <label>scale</label> <input type="number" step="0.1" />
@@ -80,10 +80,13 @@
                   <div class="inputGroup noiseSteps">
                     <label>steps</label> <input type="number" step="1" />
                   </div>
+                  <div class="inputGroup seed">
+                    <label>seed</label> <input type="number" step="1" />
+                  </div>                  
                 </div>
               </div>
 
-              <div class="paramGroup">
+              <!-- <div class="paramGroup">
                 <label>color</label>
                 <div class="flowHorizontal">
                   <div class="inputGroup fillColor">
@@ -93,13 +96,8 @@
                     <label>stroke</label> <input type="color" />
                   </div>
                 </div>
-              </div>
+              </div> -->
 
-              <div class="paramGroup">
-                <div class="inputGroup seed">
-                  <label>seed</label> <input type="number" step="1" />
-                </div>
-              </div>
             </div>
           </div>
         </div>

@@ -94,7 +94,7 @@ select:hover {
   flex-flow: column;
   align-items: center;
   justify-content: start;
-  width: 100%;
+  /* width: 100%; */
   overflow-y: auto;
   flex-grow: 2;
 }
@@ -130,7 +130,7 @@ select:hover {
 
 .flowHorizontal {
   display: flex;
-  flex-flow: row;
+  flex-flow: row wrap;
   padding: 2px;
   justify-content: center;
 }
@@ -151,4 +151,24 @@ select:hover {
 
 #layerControlTemplate {
   display: none;
+}
+
+.paramLabelRow {
+  display: flex;
+  justify-content: space-between;
+  background-color: #dbdbdb;
+}
+
+.paramLabelRow label {
+  font-weight: bold;
+  flex-grow: 2;
+  align-self: center;
+}
+
+.paramLabelRow h3 {
+  margin: 10px 0px;
+}
+
+.specialSymbol {
+  font-size: 1.3em;
 }
