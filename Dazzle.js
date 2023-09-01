@@ -13,14 +13,13 @@ import Glyph from "./js/Glyph.js";
 import { createAdjustableNumberInput } from "./js/Interface.js";
 
 let glyphs = [];
-let layers;
 
 let bAutoGenerate = false;
 
 let cnv, outputimg;
 
 /* describes the behavior of each successive layer */
-layers = [
+let layers = [
   {
     dim: { x: 30, y: 30 },
     seed: Math.floor(Math.random() * 1000),
@@ -28,9 +27,7 @@ layers = [
       scale: 0.1,
       steps: 8,
     },
-    padding: { x: 0, y: 0 },
-    fill_color: "black",
-    stroke_color: undefined,
+    padding: { x: 0, y: 0 }
   },
   {
     dim: { x: 3, y: 3 },
@@ -40,8 +37,6 @@ layers = [
       steps: 6,
     },
     padding: { x: 0, y: 0 },
-    fill_color: "black",
-    stroke_color: undefined,
   },
 ];
 

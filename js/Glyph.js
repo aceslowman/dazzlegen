@@ -53,7 +53,7 @@ export default class Glyph {
           Math.floor(this.size.width / this.dim.x),
           Math.floor(this.size.height / this.dim.y),
           img,
-          color(this.cells[i] > 0.5 ? "white" : "black")
+          this.cells[i] > 0.5 ? 255 : 0
         );
       }
     }
@@ -61,9 +61,20 @@ export default class Glyph {
 }
 
 function fillCellsWithin(x1, y1, x2, y2, img, c) {
+  // NOTE: pretty substantial performance gain by switching to pixels[]
+  // instead of set()
   for (let x = x1; x <= x1 + x2; x++) {
     for (let y = y1; y <= y1 + y2; y++) {
-      img.set(x, y, c);
+      let d = pixelDensity();
+      for (let i = 0; i < d; i++) {
+        for (let j = 0; j < d; j++) {
+          let index = 4 * ((y * d + j) * img.width * d + (x * d + i));
+          img.pixels[index] = c;
+          img.pixels[index+1] = c;
+          img.pixels[index+2] = c;
+          img.pixels[index+3] = 255;
+        }
+      }        
     }
   }
 }
