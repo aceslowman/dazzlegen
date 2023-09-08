@@ -5,7 +5,8 @@
     - [x] instead of drawing rectangles do this with one image and a large array
     - [x] after clicking randomize all the user interface elements do not work
     - [x] add functionality to input elements allowing for easier adjustable drag
-    - [ ] fix padding on levels (greater than 1)
+    - [s] fix padding on levels (greater than 1)
+    - [ ] 
  */
 
 import { stringGen } from "./js/Utilities.js";
@@ -171,97 +172,72 @@ let generate = () => {
   image(outputimg, 0, 0, width, height);
 };
 
-// TODO
+const randomSettings = {
+  dim: {
+    x: { min: 1, max: 100 },
+    y: { min: 1, max: 100 },
+  },
+  seed: { min: 0, max: 1000 },
+  noise: {
+    scale: { min: 0.1, max: 2 },
+    steps: { min: 1, max: 10 },
+  },
+};
+
 const randomizeParam = (layer_idx, param_key) => {
-  console.log("clicked!");
-
-  const randomSettings = {
-    dim: {
-      x: { min: 0, max: 100 },
-      y: { min: 0, max: 100 },
-    },
-    seed: { min: 0, max: 1000 },
-    noise: {
-      scale: { min: 0, max: 2 },
-      steps: { min: 1, max: 10 },
-    },
-  };
-
   let p = randomSettings[param_key];
   let layer = layers[layer_idx];
 
   if (param_key) {
     /* if a parameter exists then randomize it specifically */
-    // layer[param_key];
-
-    console.log("randomizing param", Object.keys(p));
-    let layerControl = document.querySelector("#layer_" + layer_idx);
     if (p.min !== undefined) {
+
     } else {
-      console.log(p);
       for (let k of Object.keys(p)) {
-        // p[k] = randomSettings[param_key][k]
-        let _p = p[k];
         let _pMin = p[k].min;
         let _pMax = p[k].max;
         layer[param_key][k] = _pMin + Math.random() * (_pMax - _pMin);
       }
     }
 
-    layerControl.querySelector(".dimX input").value = layer.dim.x;
-    layerControl.querySelector(".dimY input").value = layer.dim.y;
-    // layerControl.querySelector(".paddingX input").value = layer.padding.x;
-    // layerControl.querySelector(".paddingY input").value = layer.padding.y;
-    layerControl.querySelector(".seed input").value = layer.seed;
-    layerControl.querySelector(".noiseScale input").value = layer.noise.scale;
-    layerControl.querySelector(".noiseSteps input").value = layer.noise.steps;
+    updateLayerControls(layer_idx)
   } else if (layer) {
     /* otherwise randomize the full layer, if it exists */
-    console.log("randomizing layer");
-    let layerControl = document.querySelector("#layer_" + layer_idx);
 
     layer.dim.x = Math.floor(Math.random() * 10);
     layer.dim.y = Math.floor(Math.random() * 10);
     layer.seed = Math.floor(Math.random() * 1000);
     layer.noise.scale = Math.random() * 3;
     layer.noise.steps = Math.floor(Math.random() * 3);
-    // layer.padding.x = Math.floor(Math.random() * 10);
-    // layer.padding.y = Math.floor(Math.random() * 10);
 
-    layerControl.querySelector(".dimX input").value = layer.dim.x;
-    layerControl.querySelector(".dimY input").value = layer.dim.y;
-    // layerControl.querySelector(".paddingX input").value = layer.padding.x;
-    // layerControl.querySelector(".paddingY input").value = layer.padding.y;
-    layerControl.querySelector(".seed input").value = layer.seed;
-    layerControl.querySelector(".noiseScale input").value = layer.noise.scale;
-    layerControl.querySelector(".noiseSteps input").value = layer.noise.steps;
+    updateLayerControls(layer_idx)
   } else {
     /* otherwise randomize everything */
-    console.log("randomizing everything");
     for (let i = 0; i < layers.length; i++) {
       layer = layers[i];
-      let layerControl = document.querySelector("#layer_" + i);
-
       layer.dim.x = Math.floor(Math.random() * 10);
       layer.dim.y = Math.floor(Math.random() * 10);
       layer.seed = Math.floor(Math.random() * 1000);
       layer.noise.scale = Math.random() * 3;
       layer.noise.steps = Math.floor(Math.random() * 3);
-      // layer.padding.x = Math.floor(Math.random() * 10);
-      // layer.padding.y = Math.floor(Math.random() * 10);
-
-      layerControl.querySelector(".dimX input").value = layer.dim.x;
-      layerControl.querySelector(".dimY input").value = layer.dim.y;
-      // layerControl.querySelector(".paddingX input").value = layer.padding.x;
-      // layerControl.querySelector(".paddingY input").value = layer.padding.y;
-      layerControl.querySelector(".seed input").value = layer.seed;
-      layerControl.querySelector(".noiseScale input").value = layer.noise.scale;
-      layerControl.querySelector(".noiseSteps input").value = layer.noise.steps;
+      updateLayerControls(i)
     }
   }
 
   if (bAutoGenerate) generate();
 };
+
+const updateLayerControls = (layer_idx) => {
+  let layer = layers[layer_idx]
+  let layerControl = document.querySelector("#layer_" + layer_idx);
+  layerControl.querySelector(".dimX input").value = layer.dim.x;
+  layerControl.querySelector(".dimY input").value = layer.dim.y;
+  // layerControl.querySelector(".paddingX input").value = layer.padding.x;
+  // layerControl.querySelector(".paddingY input").value = layer.padding.y;
+  layerControl.querySelector(".seed input").value = layer.seed;
+  layerControl.querySelector(".noiseScale input").value = layer.noise.scale;
+  layerControl.querySelector(".noiseSteps input").value = layer.noise.steps;  
+}
 
 const setupInterface = () => {
   document.querySelector("#layersControl").textContent = "";

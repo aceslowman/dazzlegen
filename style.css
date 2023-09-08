@@ -82,6 +82,15 @@ select:hover {
   margin: 0px;
   padding: 5px;
   font-size: 1.4em;
+  display: none;
+}
+
+#mainTitle {
+  flex-grow: 0;
+  flex-shrink: 0;
+  object-fit: contain;
+  padding: 10px;
+  /* width: 10.2em; */
 }
 
 #title {
