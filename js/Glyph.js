@@ -1,125 +1,80 @@
 export default class Glyph {
-    constructor() {
-        this.cells = [];
+  constructor(options) {
+    this.cells = [];
+    this.seed = options.seed;
+    this.size = options.size;
+    this.dim = options.dim;
+    this.anchor = options.anchor;
+    this.padding = options.padding;
+    this.stroke_color = options.stroke_color;
+    this.fill_color = options.fill_color;
+    this.noiseParams = options.noise;
+  }
 
-        this._seed = random(1000);
+  noise() {
+    /* set seed for random generation */
+    noiseSeed(this.seed);
 
-        this.width = 100;
-        this.height = 100;
+    for (let _x = 0; _x < this.dim.x; _x++) {
+      for (let _y = 0; _y < this.dim.y; _y++) {
+        /* set the color of the cell according to its position and scale */
+        let cell = noise(
+          _x * this.noiseParams.scale + this.seed,
+          _y * this.noiseParams.scale + this.seed
+        );
 
-        this.x_dim = 4;
-        this.y_dim = 4;
-
-        this.x_anchor = 0;
-        this.y_anchor = 0;
-
-        this.x_padding = 0;
-        this.y_padding = 0;
-
-        this.x_margin = 5;
-        this.y_margin = 5;
-    }
-
-    anchor(x, y) {
-        this.x_anchor = x;
-        this.y_anchor = y;
-        return this;
-    }
-
-    padding(x, y) {
-        this.x_padding = x;
-        this.y_padding = y;
-        return this;
-    }
-
-    dim(x, y) {
-        this.x_dim = x;
-        this.y_dim = y;
-        return this;
-    }
-
-    size(x, y) {
-        this.width = x;
-        this.height = y;
-        return this;
-    }
-
-    seed(s) {
-        this._seed = s;
-        return this;
-    }
-
-    noise(scale, steps) {
-        /* set seed for random generation */
-        noiseSeed(this._seed);
-
-        for (let _x = 0; _x < this.x_dim; _x++) {
-            for (let _y = 0; _y < this.y_dim; _y++) {
-                /* set the color of the cell according to its position and scale */
-                let cell = noise(_x * scale + this._seed, _y * scale + this._seed);
-
-                if (steps !== undefined) {
-                    cell = floor(cell * (steps + 1)) / (steps - 1);
-                }
-
-                this.cells.push(cell);
-            }
+        if (this.noiseParams.steps !== undefined) {
+          cell =
+            Math.floor(cell * (this.noiseParams.steps + 1)) /
+            (this.noiseParams.steps - 1);
         }
 
-        return this;
+        this.cells.push(cell);
+      }
     }
+  }
 
-    stroke(c) {
-        this.stroke_color = c;
-        return this;
+  draw(img) {
+    /*  
+        this really just draws each cell to it's position, 
+        does not generate noise itself
+    */
+    for (let _x = 0, i = 0; _x < this.dim.x; _x++) {
+      for (let _y = 0; _y < this.dim.y; _y++, i++) {
+        let pos_x = (_x / this.dim.x) * this.size.width;
+        pos_x += this.anchor.x;
+
+        let pos_y = (_y / this.dim.y) * this.size.height;
+        pos_y += this.anchor.y;
+
+        fillCellsWithin(
+          Math.floor(pos_x),
+          Math.floor(pos_y),
+          Math.floor(this.size.width / this.dim.x),
+          Math.floor(this.size.height / this.dim.y),
+          img,
+          this.cells[i] > 0.5 ? 255 : 0
+        );
+      }
     }
+  }
+}
 
-    fill(c) {
-        this.fill_color = c;
-        return this;
-    }
-
-    next(f) {
-        for (let _x = 0, i = 0; _x < this.x_dim; _x++) {
-            for (let _y = 0; _y < this.y_dim; _y++, i++) {
-                f(this, _x, _y, i); //move to draw
-            }
+function fillCellsWithin(x1, y1, x2, y2, img, c) {
+  // NOTE: pretty substantial performance gain by switching to pixels[]
+  // instead of set()
+  for (let x = x1; x <= x1 + x2; x++) {
+    for (let y = y1; y <= y1 + y2; y++) {
+      let d = pixelDensity();
+      for (let i = 0; i < d; i++) {
+        for (let j = 0; j < d; j++) {
+          let index = 4 * ((y * d + j) * img.width * d + (x * d + i));
+          img.pixels[index] = c;
+          img.pixels[index+1] = c;
+          img.pixels[index+2] = c;
+          img.pixels[index+3] = 255;
         }
+      }        
     }
-
-    draw() {
-        /*  
-          this really just draws each cell to it's position, 
-          does not generate noise itself
-        */
-        for (let _x = 0, i = 0; _x < this.x_dim; _x++) {
-            for (let _y = 0; _y < this.y_dim; _y++, i++) {
-                let pos_x = (_x / this.x_dim) * this.width;
-                pos_x += this.x_anchor;
-
-                let pos_y = (_y / this.y_dim) * this.height;
-                pos_y += this.y_anchor;
-
-                this.stroke_color !== undefined
-                    ? stroke(this.stroke_color)
-                    : noStroke();
-                this.fill_color !== undefined
-                    ? fill(this.fill_color, this.cells[i] > 0.5 ? 255 : 0)
-                    : noFill();
-
-                rect(
-                    floor(pos_x),
-                    floor(pos_y),
-                    ceil(this.width / this.x_dim),
-                    ceil(this.height / this.y_dim)
-                );
-
-                // debug numbers
-                // fill(128)
-                // text(this.cells[i].toFixed(2),pos_x+(this.height / this.x_dim)/2,pos_y+(this.height / this.y_dim)/2);
-            }
-        }
-
-        return this;
-    }
+  }
 }

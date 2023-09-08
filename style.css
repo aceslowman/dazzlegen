@@ -1,20 +1,26 @@
 html,
 body,
-#container {
+#outerContainer, #container {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: monospace;
+}
+
+* {
+  font-family: monospace !important;
 }
 
 canvas {
-  box-shadow: 7px 7px 7px 7px;
+  box-shadow: 0px 0px 20px 0px;
 }
 
 #version {
+  display: flex;
   color: white;
   background-color: black;
+  padding: 5px;
+  align-items: center;
 }
 
 #container {
@@ -23,36 +29,93 @@ canvas {
   overflow: hidden;
 }
 
+#outerContainer {
+  display: flex;
+  flex-flow: column;
+  overflow: hidden;
+}
+
 #controls {
-  /* width: 50%; */
+  max-width: 300px;
   display: flex;
   flex-flow: column;
   align-items: stretch;
-  border: 2px dotted black;
   text-align: center;
   flex-shrink: 2;
 }
 
+.toolbar {
+  display: flex;
+  flex-flow: row;
+  border-bottom: 1px solid black;
+  align-items: stretch;
+}
+
+select {
+  border: 0px;
+  outline: 1px solid black;
+}
+
+.checkboxButton {
+  padding:5px;
+  display:flex;
+  flex-flow:row;
+  align-items: center;
+}
+
+button,
+select {
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  outline: 1px solid black;
+}
+
+button:hover,
+select:hover {
+  color: black;
+  -webkit-filter: invert(100%);
+  filter: invert(100%);
+}
+
+.toolbar h1 {
+  margin: 0px;
+  padding: 5px;
+  font-size: 1.4em;
+  display: none;
+}
+
+#mainTitle {
+  flex-grow: 0;
+  flex-shrink: 0;
+  object-fit: contain;
+  padding: 10px;
+  /* width: 10.2em; */
+}
+
 #title {
-  /* background-color: purple; */
   padding: 15px;
 }
 
-#levelsControl {
-  border: 1px solid black;
-  padding: 15px 0px;
+#layersControl {
+  padding: 20px 10px;
   display: flex;
   flex-flow: column;
   align-items: center;
   justify-content: start;
-  width: 100%;
+  /* width: 100%; */
   overflow-y: auto;
   flex-grow: 2;
-  /* background-color: orange; */
+}
+
+.layerControl {
+  border: 1px solid black;
+  margin-bottom: 15px;
+  box-shadow: 2px 2px 4px;
+  border-radius: 5px;
 }
 
 #staticControl {
-  /* background-color: yellow; */
   padding: 15px;
 }
 
@@ -65,34 +128,56 @@ canvas {
   align-items: center;
   justify-content: center;
   flex-grow: 2;
-  overflow:hidden;
+  overflow: hidden;
 }
 
-.inputGroup {
+.flowVertical {
   display: flex;
-  flex-flow: row;
+  flex-flow: column;
+  padding: 5px;
 }
 
-.levelGroup {
-  margin-bottom: 15px;
-}
-
-.levelParameter {
+.flowHorizontal {
   display: flex;
-  flex-flow: wrap;
-  flex-direction: row;
+  flex-flow: row wrap;
+  padding: 2px;
   justify-content: center;
 }
 
-.levelParameter > div {
+.paramGroup {
+  padding: 2px;
+  margin: 2px;
+  border: 1px solid black;
+}
+
+.inputGroup {
+  margin: 5px;
+}
+
+.inputGroup input {
+  max-width: 50px;
+}
+
+#layerControlTemplate {
+  display: none;
+}
+
+.paramLabelRow {
   display: flex;
-  flex-flow: row wrap;
+  justify-content: space-between;
+  background-color: #dbdbdb;
 }
 
-.levelParameter > fieldset {
-  border: 1px dashed gray;
+.paramLabelRow label {
+  font-weight: bold;
+  flex-grow: 2;
+  align-self: center;
 }
 
-.levelParameter > fieldset > input {
-  width: 50px;
+.paramLabelRow h3 {
+  margin: 10px 0px;
+}
+
+.specialSymbol {
+  font-size: 1.3em;
 }

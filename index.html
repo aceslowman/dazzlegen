@@ -15,32 +15,96 @@
   </head>
 
   <body>
-    <div id="container">
-      <div id="controls">
-        <div id="title">
-          <h1>dazzlegen</h1>
-          <div id="version">v 1.1</div>
-        </div>
+    <div id="outerContainer">
+      <div id="topToolbar" class="toolbar">
+        <h1>dazzlegen</h1>
+        <img id="mainTitle" src="img/dazzlegen_logo.png" alt="dazzlegen logo" />
+        <div id="version">v 1.1</div>
 
-        <div id="levelsControl"></div>
-
-        <div id="staticControl">
-          <div>auto: <input id="autoGenTick" type="checkbox" /></div>
-          <button id="randomizeAllButton">randomize all</button>
-          <button id="generateButton">generate</button>
-          <select id="resolutionSelect">
-            <option value="64">64x64</option>
-            <option value="128">128x128</option>
-            <option value="256">256x256</option>
-            <option value="512">512x512</option>
-            <option value="1024">1024x1024</option>
-          </select>
-          <button id="snapshotButton">snap</button>
+        <button id="randomizeAllButton">randomize all</button>
+        <button id="generateButton">generate</button>
+                <div class="checkboxButton">
+          auto: <input id="autoGenTick" type="checkbox" />
         </div>
+        <select id="resolutionSelect">
+          <option value="64">64x64</option>
+          <option value="128">128x128</option>
+          <option value="256">256x256</option>
+          <option value="512">512x512</option>
+          <option value="1024">1024x1024</option>
+        </select>
+        <button id="snapshotButton">snap</button>
+        <button id="addLevelButton">addLevel</button>
+        <button id="removeLevelButton">removeLevel</button>
       </div>
-      <div id="workArea"></div>
-    </div>
+      <div id="container">
+        <div id="controls">
+          <div id="layersControl">
+            <!-- this is copied in Dazzle.js -->
+          </div>
 
-    <script type="module" defer src="Main.js"></script>
+          <div id="layerControlTemplate" class="layerControl">
+            <div class="paramLabelRow"><label><h3 class="layerLabel">placeholder</h3></label><button class="randomButton specialSymbol">⚄</button></div>
+            <div class="flowVertical">
+              <div class="paramGroup dim">
+                <div class="paramLabelRow"><label>dim</label><button class="randomButton specialSymbol">⚄</button></div>
+                <div class="flowHorizontal">
+                  <div class="inputGroup dimX">
+                    <input type="number" step="1" min="0.0" />
+                  </div>
+                  <div class="inputGroup">x</div>
+                  <div class="inputGroup dimY">
+                    <input type="number" step="1" min="0.0" />
+                  </div>
+                  <div class="inputGroup">cells</div>
+                </div>
+              </div>
+
+              <!-- <div class="paramGroup">
+                <label>padding</label>
+                <div class="flowHorizontal">
+                  <div class="inputGroup paddingX">
+                    <label>x</label> <input type="number" step="0.1" />
+                  </div>
+                  <div class="inputGroup paddingY">
+                    <label>y</label> <input type="number" step="0.1" />
+                  </div>
+                </div>
+              </div> -->
+
+              <div class="paramGroup noise">
+                <div class="paramLabelRow"><label>noise</label><button class="randomButton specialSymbol">⚄</button></div>
+                <div class="flowHorizontal">
+                  <div class="inputGroup noiseScale">
+                    <label>scale</label> <input type="number" step="0.1" />
+                  </div>
+                  <div class="inputGroup noiseSteps">
+                    <label>steps</label> <input type="number" step="1" />
+                  </div>
+                  <div class="inputGroup seed">
+                    <label>seed</label> <input type="number" step="1" />
+                  </div>                  
+                </div>
+              </div>
+
+              <!-- <div class="paramGroup">
+                <label>color</label>
+                <div class="flowHorizontal">
+                  <div class="inputGroup fillColor">
+                    <label>fill</label> <input type="color" />
+                  </div>
+                  <div class="inputGroup strokeColor">
+                    <label>stroke</label> <input type="color" />
+                  </div>
+                </div>
+              </div> -->
+
+            </div>
+          </div>
+        </div>
+        <div id="workArea"></div>
+      </div>
+    </div>
+    <script type="module" defer src="Dazzle.js"></script>
   </body>
 </html>
