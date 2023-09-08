@@ -33,15 +33,22 @@
           <option value="512">512x512</option>
           <option value="1024">1024x1024</option>
         </select>
-        <button id="snapshotButton">snap</button>
-        <button id="addLevelButton">addLevel</button>
-        <button id="removeLevelButton">removeLevel</button>
+        <button id="snapshotButton">snap</button>        
       </div>
       <div id="container">
         <div id="controls">
           <div id="layersControl">
+
             <!-- this is copied in Dazzle.js -->
+            <div id="layersControlInner">
+
+            </div>
+            <div id="layerButtons">
+              <button id="addLevelButton">add level</button>
+              <button id="removeLevelButton">remove level</button>
+            </div>
           </div>
+          
 
           <div id="layerControlTemplate" class="layerControl">
             <div class="paramLabelRow"><label><h3 class="layerLabel">placeholder</h3></label><button class="randomButton specialSymbol">⚄</button></div>
@@ -100,7 +107,9 @@
               </div> -->
 
             </div>
+          
           </div>
+          
         </div>
         <div id="workArea"></div>
       </div>

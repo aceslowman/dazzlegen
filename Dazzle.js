@@ -62,8 +62,8 @@ window.setup = () => {
 
   // instead of using the pg, create one image and edit it's pixels
   outputimg = createImage(
-    window.workAreaBounds.width,
-    window.workAreaBounds.width
+    Math.floor(window.workAreaBounds.width),
+    Math.floor(window.workAreaBounds.width)
   );
 
   generate();
@@ -240,7 +240,7 @@ const updateLayerControls = (layer_idx) => {
 }
 
 const setupInterface = () => {
-  document.querySelector("#layersControl").textContent = "";
+  document.querySelector("#layersControlInner").textContent = "";
 
   /* add level */
   document.querySelector("#addLevelButton").addEventListener("click", (e) => {
@@ -424,7 +424,7 @@ const setupInterface = () => {
         if (bAutoGenerate) generate();
       });
 
-    document.querySelector("#layersControl").appendChild(layerControl);
+    document.querySelector("#layersControlInner").appendChild(layerControl);
   }
 };
 

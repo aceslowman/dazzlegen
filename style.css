@@ -90,6 +90,7 @@ select:hover {
   flex-shrink: 0;
   object-fit: contain;
   padding: 10px;
+  padding-top: 11px;
   /* width: 10.2em; */
 }
 
