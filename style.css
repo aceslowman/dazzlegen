@@ -143,6 +143,7 @@ select:hover {
   flex-flow: row wrap;
   padding: 2px;
   justify-content: center;
+  align-items: center;
 }
 
 .paramGroup {
@@ -164,9 +165,11 @@ select:hover {
 }
 
 .paramLabelRow {
+
   display: flex;
   justify-content: space-between;
   background-color: #dbdbdb;
+  outline: 1px solid black;
 }
 
 .paramLabelRow label {
@@ -176,7 +179,7 @@ select:hover {
 }
 
 .paramLabelRow h3 {
-  margin: 10px 0px;
+  margin: 5px 0px;
 }
 
 .specialSymbol {

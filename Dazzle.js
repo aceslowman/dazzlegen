@@ -89,6 +89,8 @@ let generate = () => {
 
   glyphs = [];
 
+  if(!layers[0]) return
+
   glyphs.push(
     new Glyph({
       anchor: {
@@ -117,6 +119,8 @@ let generate = () => {
   glyphs[0].draw(outputimg);
 
   let l = 1;
+
+  if (!layers[l]) return;
 
   let stack = [];
   stack.push(glyphs[0]);
@@ -184,6 +188,7 @@ const randomSettings = {
   },
 };
 
+/* todo */
 const randomizeParam = (layer_idx, param_key) => {
   let p = randomSettings[param_key];
   let layer = layers[layer_idx];
@@ -191,7 +196,6 @@ const randomizeParam = (layer_idx, param_key) => {
   if (param_key) {
     /* if a parameter exists then randomize it specifically */
     if (p.min !== undefined) {
-
     } else {
       for (let k of Object.keys(p)) {
         let _pMin = p[k].min;
@@ -200,7 +204,7 @@ const randomizeParam = (layer_idx, param_key) => {
       }
     }
 
-    updateLayerControls(layer_idx)
+    updateLayerControls(layer_idx);
   } else if (layer) {
     /* otherwise randomize the full layer, if it exists */
 
@@ -210,7 +214,7 @@ const randomizeParam = (layer_idx, param_key) => {
     layer.noise.scale = Math.random() * 3;
     layer.noise.steps = Math.floor(Math.random() * 3);
 
-    updateLayerControls(layer_idx)
+    updateLayerControls(layer_idx);
   } else {
     /* otherwise randomize everything */
     for (let i = 0; i < layers.length; i++) {
@@ -220,7 +224,7 @@ const randomizeParam = (layer_idx, param_key) => {
       layer.seed = Math.floor(Math.random() * 1000);
       layer.noise.scale = Math.random() * 3;
       layer.noise.steps = Math.floor(Math.random() * 3);
-      updateLayerControls(i)
+      updateLayerControls(i);
     }
   }
 
@@ -228,7 +232,7 @@ const randomizeParam = (layer_idx, param_key) => {
 };
 
 const updateLayerControls = (layer_idx) => {
-  let layer = layers[layer_idx]
+  let layer = layers[layer_idx];
   let layerControl = document.querySelector("#layer_" + layer_idx);
   layerControl.querySelector(".dimX input").value = layer.dim.x;
   layerControl.querySelector(".dimY input").value = layer.dim.y;
@@ -236,14 +240,26 @@ const updateLayerControls = (layer_idx) => {
   // layerControl.querySelector(".paddingY input").value = layer.padding.y;
   layerControl.querySelector(".seed input").value = layer.seed;
   layerControl.querySelector(".noiseScale input").value = layer.noise.scale;
-  layerControl.querySelector(".noiseSteps input").value = layer.noise.steps;  
+  layerControl.querySelector(".noiseSteps input").value = layer.noise.steps;
+};
+
+const updateInterface = () => {
+
 }
 
 const setupInterface = () => {
   document.querySelector("#layersControlInner").textContent = "";
+  
+  document.querySelector("#layerButtons").textContent = "";
+  // add level button
+  let addLevelButton = document.createElement('button');
+  addLevelButton.innerText = 'add level';
+  addLevelButton.id = 'addLevelButton'
+  document.querySelector("#layerButtons").appendChild(addLevelButton)
 
   /* add level */
-  document.querySelector("#addLevelButton").addEventListener("click", (e) => {
+  const handleAddLevel = (e) => {
+    
     layers.push({
       glyphs: [],
       dim: { x: 3, y: 3 },
@@ -254,18 +270,12 @@ const setupInterface = () => {
       },
       padding: { x: 0, y: 0 },
     });
+    console.log(layers)
     setupInterface();
     if (bAutoGenerate) generate();
-  });
-
-  /* remove level */
-  document
-    .querySelector("#removeLevelButton")
-    .addEventListener("click", (e) => {
-      layers.pop();
-      setupInterface();
-      if (bAutoGenerate) generate();
-    });
+  }
+  document.querySelector("#addLevelButton").removeEventListener("click", handleAddLevel);
+  document.querySelector("#addLevelButton").addEventListener("click", handleAddLevel);
 
   /* snapshot */
   document.querySelector("#snapshotButton").addEventListener("click", (e) => {
@@ -342,6 +352,15 @@ const setupInterface = () => {
     //     layer.stroke_color = e.target.value;
     //     if (bAutoGenerate) generate();
     //   });
+
+    /* remove button */
+    layerControl
+      .querySelector(".removeLevelButton")
+      .addEventListener("click", (e) => {
+        layers.splice(i, 1);
+        setupInterface();
+        if (bAutoGenerate) generate();
+      });
 
     /* dim */
     layerControl

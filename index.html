@@ -23,7 +23,7 @@
 
         <button id="randomizeAllButton">randomize all</button>
         <button id="generateButton">generate</button>
-                <div class="checkboxButton">
+        <div class="checkboxButton">
           auto: <input id="autoGenTick" type="checkbox" />
         </div>
         <select id="resolutionSelect">
@@ -33,33 +33,37 @@
           <option value="512">512x512</option>
           <option value="1024">1024x1024</option>
         </select>
-        <button id="snapshotButton">snap</button>        
+        <button id="snapshotButton">snap</button>
       </div>
       <div id="container">
         <div id="controls">
           <div id="layersControl">
-
             <!-- this is copied in Dazzle.js -->
-            <div id="layersControlInner">
-
-            </div>
+            <div id="layersControlInner"></div>
             <div id="layerButtons">
               <button id="addLevelButton">add level</button>
-              <button id="removeLevelButton">remove level</button>
+              <!-- <button id="removeLevelButton">remove level</button> -->
             </div>
           </div>
-          
 
           <div id="layerControlTemplate" class="layerControl">
-            <div class="paramLabelRow"><label><h3 class="layerLabel">placeholder</h3></label><button class="randomButton specialSymbol">⚄</button></div>
+            <div class="paramLabelRow">
+              <button class="removeLevelButton specialSymbol">x</button>
+              <label><h3 class="layerLabel">placeholder</h3></label
+              ><button class="randomButton specialSymbol">⚄</button>
+              
+            </div>
             <div class="flowVertical">
               <div class="paramGroup dim">
-                <div class="paramLabelRow"><label>dim</label><button class="randomButton specialSymbol">⚄</button></div>
+                <div class="paramLabelRow">
+                  <label>dim</label
+                  ><button class="randomButton specialSymbol">⚄</button>
+                </div>
                 <div class="flowHorizontal">
                   <div class="inputGroup dimX">
                     <input type="number" step="1" min="0.0" />
                   </div>
-                  <div class="inputGroup">x</div>
+                  <div class="inputGroup">🔗</div>
                   <div class="inputGroup dimY">
                     <input type="number" step="1" min="0.0" />
                   </div>
@@ -80,7 +84,10 @@
               </div> -->
 
               <div class="paramGroup noise">
-                <div class="paramLabelRow"><label>noise</label><button class="randomButton specialSymbol">⚄</button></div>
+                <div class="paramLabelRow">
+                  <label>noise</label
+                  ><button class="randomButton specialSymbol">⚄</button>
+                </div>
                 <div class="flowHorizontal">
                   <div class="inputGroup noiseScale">
                     <label>scale</label> <input type="number" step="0.1" />
@@ -90,7 +97,7 @@
                   </div>
                   <div class="inputGroup seed">
                     <label>seed</label> <input type="number" step="1" />
-                  </div>                  
+                  </div>
                 </div>
               </div>
 
@@ -105,11 +112,8 @@
                   </div>
                 </div>
               </div> -->
-
             </div>
-          
           </div>
-          
         </div>
         <div id="workArea"></div>
       </div>
