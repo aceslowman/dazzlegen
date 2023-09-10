@@ -151,8 +151,6 @@ let generate = () => {
       for (let y = 0; y < obj.dim.y; y++, i++) {
         let t = obj;
 
-        console.log({t, l})
-
         let w = t.size.width / t.dim.x;
         let h = t.size.height / t.dim.y;
 
@@ -408,7 +406,6 @@ const setupInterface = () => {
       },
       padding: { x: 0, y: 0 },
     });
-    console.log(layers);
     setupLayerControls();
     if (bAutoGenerate) generate();
   };
