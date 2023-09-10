@@ -45,6 +45,18 @@ let layers = [
   },
 ];
 
+const randOpts = {
+  dim: {
+    x: { min: 1, max: 50 },
+    y: { min: 1, max: 50 },
+  },
+  seed: { min: 0, max: 1000 },
+  noise: {
+    scale: { min: 0.1, max: 2 },
+    steps: { min: 1, max: 10 },
+  },
+};
+
 window.setup = () => {
   window.workAreaElement = document.querySelector("#workArea");
   window.workAreaBounds = window.workAreaElement.getBoundingClientRect();
@@ -70,7 +82,13 @@ window.setup = () => {
 
   generate();
 
+    /* snapshot */
+    document.querySelector("#snapshotButton").addEventListener("click", (e) => {
+      snapshot();
+    });
+
   setupInterface();
+  setupLayerControls();
 };
 
 window.windowResized = () => {
@@ -94,6 +112,7 @@ let generate = () => {
 
   glyphs = [
     new Glyph({
+      layer_id: 0,
       anchor: {
         x: 0,
         y: 0,
@@ -132,10 +151,13 @@ let generate = () => {
       for (let y = 0; y < obj.dim.y; y++, i++) {
         let t = obj;
 
+        console.log({t, l})
+
         let w = t.size.width / t.dim.x;
         let h = t.size.height / t.dim.y;
 
         let glyph = new Glyph({
+          layer_id: t.layer_id + 1,
           anchor: {
             x: t.anchor.x + x * w + t.padding.x,
             y: t.anchor.y + y * h + t.padding.y,
@@ -163,8 +185,9 @@ let generate = () => {
 
         glyphs.push(glyph);
 
-        if (l < layers.length - 1) {
-          l += 1;
+        // if (l < layers.length - 1) {
+          // l += 1;
+        if(glyph.layer_id < layers.length - 1) {
           stack.push(glyph);
         }
       }
@@ -174,18 +197,6 @@ let generate = () => {
   outputimg.updatePixels();
 
   image(outputimg, 0, 0, width, height);
-};
-
-const randOpts = {
-  dim: {
-    x: { min: 1, max: 50 },
-    y: { min: 1, max: 50 },
-  },
-  seed: { min: 0, max: 1000 },
-  noise: {
-    scale: { min: 0.1, max: 2 },
-    steps: { min: 1, max: 10 },
-  },
 };
 
 const randomize = (layer_idx, param_key) => {
@@ -238,98 +249,8 @@ const randomize = (layer_idx, param_key) => {
   if (bAutoGenerate) generate();
 };
 
-const updateLayerControls = (layer_idx) => {
-  let layer = layers[layer_idx];
-  let layerControl = document.querySelector("#layer_" + layer_idx);
-  layerControl.querySelector(".dimX input").value = layer.dim.x;
-  layerControl.querySelector(".dimY input").value = layer.dim.y;
-  // layerControl.querySelector(".paddingX input").value = layer.padding.x;
-  // layerControl.querySelector(".paddingY input").value = layer.padding.y;
-  layerControl.querySelector(".seed input").value = layer.seed;
-  layerControl.querySelector(".noiseScale input").value = layer.noise.scale;
-  layerControl.querySelector(".noiseSteps input").value = layer.noise.steps;
-};
-
-const setupInterface = () => {
+const setupLayerControls = () => {
   document.querySelector("#layersControlInner").textContent = "";
-
-  document.querySelector("#layerButtons").textContent = "";
-  // add level button
-  let addLevelButton = document.createElement("button");
-  addLevelButton.innerText = "add level";
-  addLevelButton.id = "addLevelButton";
-  document.querySelector("#layerButtons").appendChild(addLevelButton);
-
-  /* add level */
-  const handleAddLevel = (e) => {
-    layers.push({
-      glyphs: [],
-      dim: { x: 3, y: 3 },
-      seed: Math.floor(Math.random() * 1000),
-      noise: {
-        scale: 0.1,
-        steps: 6,
-      },
-      padding: { x: 0, y: 0 },
-    });
-    console.log(layers);
-    setupInterface();
-    if (bAutoGenerate) generate();
-  };
-  document
-    .querySelector("#addLevelButton")
-    .removeEventListener("click", handleAddLevel);
-  document
-    .querySelector("#addLevelButton")
-    .addEventListener("click", handleAddLevel);
-
-  /* snapshot */
-  document.querySelector("#snapshotButton").addEventListener("click", (e) => {
-    snapshot();
-  });
-
-  /* dimension select */
-  document.querySelector("#resolutionSelect").addEventListener("input", (e) => {
-    /* save to local storage */
-    window.localStorage.setItem("output_resolution", Number(e.target.value));
-    outputimg.resize(Number(e.target.value), Number(e.target.value));
-    if (bAutoGenerate) generate();
-  });
-
-  /* load from local storage */
-  if (window.localStorage.getItem("output_resolution")) {
-    document.querySelector("#resolutionSelect").value = Number(
-      window.localStorage.getItem("output_resolution")
-    );
-  } else {
-    /* set default */
-    document.querySelector("#resolutionSelect").value = 512;
-  }
-
-  /* .randomize all */
-  document
-    .querySelector("#randomizeAllButton")
-    .addEventListener("click", (e) => {
-      randomize();
-    });
-
-  /* .generate */
-  document.querySelector("#generateButton").addEventListener("click", (e) => {
-    generate();
-  });
-
-  /* auto generate */
-  if (window.localStorage.getItem("bAutoGenerate")) {
-    bAutoGenerate = Boolean(window.localStorage.getItem("bAutoGenerate"));
-  } else {
-    bAutoGenerate = false;
-  }
-  document.querySelector("#autoGenTick").checked = bAutoGenerate;
-  document.querySelector("#autoGenTick").addEventListener("input", (e) => {
-    bAutoGenerate = Boolean(e.target.checked);
-    window.localStorage.setItem("bAutoGenerate", bAutoGenerate);
-  });
-
   for (let i = 0; i < layers.length; i++) {
     let layer = layers[i];
     let layerControl = document
@@ -364,7 +285,7 @@ const setupInterface = () => {
       .querySelector(".removeLevelButton")
       .addEventListener("click", (e) => {
         layers.splice(i, 1);
-        setupInterface();
+        setupLayerControls();
         if (bAutoGenerate) generate();
       });
 
@@ -451,6 +372,96 @@ const setupInterface = () => {
 
     document.querySelector("#layersControlInner").appendChild(layerControl);
   }
+}
+
+const updateLayerControls = (layer_idx) => {
+  let layer = layers[layer_idx];
+  let layerControl = document.querySelector("#layer_" + layer_idx);
+  layerControl.querySelector(".dimX input").value = layer.dim.x;
+  layerControl.querySelector(".dimY input").value = layer.dim.y;
+  // layerControl.querySelector(".paddingX input").value = layer.padding.x;
+  // layerControl.querySelector(".paddingY input").value = layer.padding.y;
+  layerControl.querySelector(".seed input").value = layer.seed;
+  layerControl.querySelector(".noiseScale input").value = layer.noise.scale;
+  layerControl.querySelector(".noiseSteps input").value = layer.noise.steps;
+};
+
+const setupInterface = () => {
+  document.querySelector("#layersControlInner").textContent = "";
+
+  document.querySelector("#layerButtons").textContent = "";
+  // add level button
+  let addLevelButton = document.createElement("button");
+  addLevelButton.innerText = "add level";
+  addLevelButton.id = "addLevelButton";
+  document.querySelector("#layerButtons").appendChild(addLevelButton);
+
+  /* add level */
+  const handleAddLevel = (e) => {
+    layers.push({
+      glyphs: [],
+      dim: { x: 3, y: 3 },
+      seed: Math.floor(Math.random() * 1000),
+      noise: {
+        scale: 0.1,
+        steps: 6,
+      },
+      padding: { x: 0, y: 0 },
+    });
+    console.log(layers);
+    setupLayerControls();
+    if (bAutoGenerate) generate();
+  };
+  document
+    .querySelector("#addLevelButton")
+    .removeEventListener("click", handleAddLevel);
+  document
+    .querySelector("#addLevelButton")
+    .addEventListener("click", handleAddLevel);
+
+  /* dimension select */
+  document.querySelector("#resolutionSelect").addEventListener("input", (e) => {
+    /* save to local storage */
+    window.localStorage.setItem("output_resolution", Number(e.target.value));
+    outputimg.resize(Number(e.target.value), Number(e.target.value));
+    if (bAutoGenerate) generate();
+  });
+
+  /* load from local storage */
+  if (window.localStorage.getItem("output_resolution")) {
+    document.querySelector("#resolutionSelect").value = Number(
+      window.localStorage.getItem("output_resolution")
+    );
+  } else {
+    /* set default */
+    document.querySelector("#resolutionSelect").value = 512;
+  }
+
+  /* .randomize all */
+  document
+    .querySelector("#randomizeAllButton")
+    .addEventListener("click", (e) => {
+      randomize();
+    });
+
+  /* .generate */
+  document.querySelector("#generateButton").addEventListener("click", (e) => {
+    generate();
+  });
+
+  /* auto generate */
+  if (window.localStorage.getItem("bAutoGenerate")) {
+    bAutoGenerate = Boolean(window.localStorage.getItem("bAutoGenerate"));
+  } else {
+    bAutoGenerate = false;
+  }
+  document.querySelector("#autoGenTick").checked = bAutoGenerate;
+  document.querySelector("#autoGenTick").addEventListener("input", (e) => {
+    bAutoGenerate = Boolean(e.target.checked);
+    window.localStorage.setItem("bAutoGenerate", bAutoGenerate);
+  });
+
+ 
 };
 
 const snapshot = () => {

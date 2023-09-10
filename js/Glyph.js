@@ -1,5 +1,6 @@
 export default class Glyph {
   constructor(options) {
+    this.layer_id = options.layer_id;
     this.cells = [];
     this.seed = options.seed;
     this.size = options.size;
