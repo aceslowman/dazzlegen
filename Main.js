@@ -6,7 +6,9 @@
     - [x] after clicking randomize all the user interface elements do not work
     - [x] add functionality to input elements allowing for easier adjustable drag
     - [s] fix padding on levels (greater than 1)
-    - [ ] 
+    - [ ] implement aspect lock
+    - [ ] tidy up and refactor code
+    - [ ] fix issue with small area appearing in the upper left corner of output
  */
 
 import { stringGen } from "./js/Utilities.js";
@@ -83,15 +85,14 @@ window.windowResized = () => {
 };
 
 let generate = () => {
+  /* if there are no layers don't generate */
+  if (!layers[0] || !layers[1]) return;
+
+  /* refresh image */
   outputimg = createImage(outputimg.width, outputimg.width);
   outputimg.loadPixels();
-  clear();
 
-  glyphs = [];
-
-  if(!layers[0]) return
-
-  glyphs.push(
+  glyphs = [
     new Glyph({
       anchor: {
         x: 0,
@@ -112,16 +113,15 @@ let generate = () => {
       stroke_color: layers[0].stroke_color,
       fill_color: layers[0].fill_color,
       padding: { ...layers[0].padding },
-    })
-  );
+    }),
+  ];
 
   glyphs[0].noise();
   glyphs[0].draw(outputimg);
 
   let l = 1;
 
-  if (!layers[l]) return;
-
+  /* traverse structure */
   let stack = [];
   stack.push(glyphs[0]);
 
@@ -176,10 +176,10 @@ let generate = () => {
   image(outputimg, 0, 0, width, height);
 };
 
-const randomSettings = {
+const randOpts = {
   dim: {
-    x: { min: 1, max: 100 },
-    y: { min: 1, max: 100 },
+    x: { min: 1, max: 50 },
+    y: { min: 1, max: 50 },
   },
   seed: { min: 0, max: 1000 },
   noise: {
@@ -188,9 +188,8 @@ const randomSettings = {
   },
 };
 
-/* todo */
-const randomizeParam = (layer_idx, param_key) => {
-  let p = randomSettings[param_key];
+const randomize = (layer_idx, param_key) => {
+  let p = randOpts[param_key];
   let layer = layers[layer_idx];
 
   if (param_key) {
@@ -198,32 +197,40 @@ const randomizeParam = (layer_idx, param_key) => {
     if (p.min !== undefined) {
     } else {
       for (let k of Object.keys(p)) {
-        let _pMin = p[k].min;
-        let _pMax = p[k].max;
-        layer[param_key][k] = _pMin + Math.random() * (_pMax - _pMin);
+        layer[param_key][k] = random(p[k].min, p[k].max);
       }
     }
 
     updateLayerControls(layer_idx);
   } else if (layer) {
     /* otherwise randomize the full layer, if it exists */
-
-    layer.dim.x = Math.floor(Math.random() * 10);
-    layer.dim.y = Math.floor(Math.random() * 10);
-    layer.seed = Math.floor(Math.random() * 1000);
-    layer.noise.scale = Math.random() * 3;
-    layer.noise.steps = Math.floor(Math.random() * 3);
-
+    layer.dim.x = random(randOpts.dim.x.min, randOpts.dim.x.max);
+    layer.dim.y = random(randOpts.dim.y.min, randOpts.dim.y.max);
+    layer.seed = random(randOpts.seed.min, randOpts.seed.max);
+    layer.noise.scale = random(
+      randOpts.noise.scale.min,
+      randOpts.noise.scale.max
+    );
+    layer.noise.steps = random(
+      randOpts.noise.steps.min,
+      randOpts.noise.steps.max
+    );
     updateLayerControls(layer_idx);
   } else {
     /* otherwise randomize everything */
     for (let i = 0; i < layers.length; i++) {
       layer = layers[i];
-      layer.dim.x = Math.floor(Math.random() * 10);
-      layer.dim.y = Math.floor(Math.random() * 10);
-      layer.seed = Math.floor(Math.random() * 1000);
-      layer.noise.scale = Math.random() * 3;
-      layer.noise.steps = Math.floor(Math.random() * 3);
+      layer.dim.x = random(randOpts.dim.x.min, randOpts.dim.x.max);
+      layer.dim.y = random(randOpts.dim.y.min, randOpts.dim.y.max);
+      layer.seed = random(randOpts.seed.min, randOpts.seed.max);
+      layer.noise.scale = random(
+        randOpts.noise.scale.min,
+        randOpts.noise.scale.max
+      );
+      layer.noise.steps = random(
+        randOpts.noise.steps.min,
+        randOpts.noise.steps.max
+      );
       updateLayerControls(i);
     }
   }
@@ -243,23 +250,18 @@ const updateLayerControls = (layer_idx) => {
   layerControl.querySelector(".noiseSteps input").value = layer.noise.steps;
 };
 
-const updateInterface = () => {
-
-}
-
 const setupInterface = () => {
   document.querySelector("#layersControlInner").textContent = "";
-  
+
   document.querySelector("#layerButtons").textContent = "";
   // add level button
-  let addLevelButton = document.createElement('button');
-  addLevelButton.innerText = 'add level';
-  addLevelButton.id = 'addLevelButton'
-  document.querySelector("#layerButtons").appendChild(addLevelButton)
+  let addLevelButton = document.createElement("button");
+  addLevelButton.innerText = "add level";
+  addLevelButton.id = "addLevelButton";
+  document.querySelector("#layerButtons").appendChild(addLevelButton);
 
   /* add level */
   const handleAddLevel = (e) => {
-    
     layers.push({
       glyphs: [],
       dim: { x: 3, y: 3 },
@@ -270,12 +272,16 @@ const setupInterface = () => {
       },
       padding: { x: 0, y: 0 },
     });
-    console.log(layers)
+    console.log(layers);
     setupInterface();
     if (bAutoGenerate) generate();
-  }
-  document.querySelector("#addLevelButton").removeEventListener("click", handleAddLevel);
-  document.querySelector("#addLevelButton").addEventListener("click", handleAddLevel);
+  };
+  document
+    .querySelector("#addLevelButton")
+    .removeEventListener("click", handleAddLevel);
+  document
+    .querySelector("#addLevelButton")
+    .addEventListener("click", handleAddLevel);
 
   /* snapshot */
   document.querySelector("#snapshotButton").addEventListener("click", (e) => {
@@ -304,7 +310,7 @@ const setupInterface = () => {
   document
     .querySelector("#randomizeAllButton")
     .addEventListener("click", (e) => {
-      randomizeParam();
+      randomize();
     });
 
   /* .generate */
@@ -336,10 +342,10 @@ const setupInterface = () => {
     layerControl
       .querySelector(".randomButton")
       .addEventListener("click", (e) => {
-        randomizeParam(i);
+        randomize(i);
       });
 
-    layerControl.querySelector(".layerLabel").innerText = "layer #" + (i + 1);
+    layerControl.querySelector(".layerLabel").innerText = "lvl #" + (i + 1);
 
     // layerControl.querySelector(".fillColor").addEventListener("input", (e) => {
     //   layer.fill_color = e.target.value;
@@ -366,7 +372,7 @@ const setupInterface = () => {
     layerControl
       .querySelector(".dim .randomButton")
       .addEventListener("click", (e) => {
-        randomizeParam(i, "dim");
+        randomize(i, "dim");
       });
     layerControl.querySelector(".dimX input").value = layer.dim.x;
     /* bind the variable input thing */
@@ -414,7 +420,7 @@ const setupInterface = () => {
     layerControl
       .querySelector(".noise .randomButton")
       .addEventListener("click", (e) => {
-        randomizeParam(i, "noise");
+        randomize(i, "noise");
       });
 
     /* seed */
