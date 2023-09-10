@@ -6,9 +6,9 @@
     - [x] after clicking randomize all the user interface elements do not work
     - [x] add functionality to input elements allowing for easier adjustable drag
     - [s] fix padding on levels (greater than 1)
+    - [x] fix issue with small area appearing in the upper left corner of output
     - [ ] implement aspect lock
     - [ ] tidy up and refactor code
-    - [ ] fix issue with small area appearing in the upper left corner of output
  */
 
 import { stringGen } from "./js/Utilities.js";
