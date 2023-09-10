@@ -33,7 +33,7 @@
           <option value="512">512x512</option>
           <option value="1024">1024x1024</option>
         </select>
-        <button id="snapshotButton">snap</button>
+        <button id="snapshotButton">export</button>
       </div>
       <div id="container">
         <div id="controls">
@@ -49,21 +49,37 @@
           <div id="layerControlTemplate" class="layerControl">
             <div class="paramLabelRow">
               <button class="removeLevelButton specialSymbol">x</button>
-              <label><h3 class="layerLabel">placeholder</h3></label
-              ><button class="randomButton specialSymbol">⚄</button>
-              
+              <label><h3 class="layerLabel">placeholder</h3></label>
+              <div class="tooltip">
+                ?
+                <span class="tooltiptext"
+                  >each level works upon the one before it. noise is generated
+                  on lvl 1, and then that is used as a map for lvl 2 to generate
+                  noise on top of it, and so on.</span
+                >
+              </div>
+              <button class="randomButton specialSymbol">⚄</button>
             </div>
             <div class="flowVertical">
               <div class="paramGroup dim">
                 <div class="paramLabelRow">
-                  <label>dim</label
-                  ><button class="randomButton specialSymbol">⚄</button>
+                  <label>dim</label>
+                  <div class="tooltip">
+                    ?
+                    <span class="tooltiptext"
+                      >the number of cells generated in this level of
+                      recursion</span
+                    >
+                  </div>
+                  <button class="randomButton specialSymbol">⚄</button>
                 </div>
                 <div class="flowHorizontal">
                   <div class="inputGroup dimX">
                     <input type="number" step="1" min="0.0" />
                   </div>
-                  <div class="inputGroup">🔗</div>
+                  <div class="inputGroup">
+                    <button class="aspectLockButton">🔗</button>
+                  </div>
                   <div class="inputGroup dimY">
                     <input type="number" step="1" min="0.0" />
                   </div>
@@ -85,8 +101,16 @@
 
               <div class="paramGroup noise">
                 <div class="paramLabelRow">
-                  <label>noise</label
-                  ><button class="randomButton specialSymbol">⚄</button>
+                  <label>noise</label>
+                  <div class="tooltip">
+                    ?
+                    <span class="tooltiptext"
+                      >the noise that creates the pattern. scale affects the
+                      size of the noise, and steps affects the number of
+                      distinct zones the noise is separated into.</span
+                    >
+                  </div>
+                  <button class="randomButton specialSymbol">⚄</button>
                 </div>
                 <div class="flowHorizontal">
                   <div class="inputGroup noiseScale">

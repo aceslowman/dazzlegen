@@ -26,7 +26,7 @@ const workarea_padding = 60;
 /* describes the behavior of each successive layer */
 let layers = [
   {
-    dim: { x: 30, y: 30 },
+    dim: { x: 30, y: 30, aspectLock: false },
     seed: Math.floor(Math.random() * 1000),
     noise: {
       scale: 0.1,
@@ -35,7 +35,7 @@ let layers = [
     padding: { x: 0, y: 0 },
   },
   {
-    dim: { x: 3, y: 3 },
+    dim: { x: 3, y: 3, aspectLock: false },
     seed: Math.floor(Math.random() * 1000),
     noise: {
       scale: 0.1,
@@ -81,11 +81,6 @@ window.setup = () => {
   );
 
   generate();
-
-    /* snapshot */
-    document.querySelector("#snapshotButton").addEventListener("click", (e) => {
-      snapshot();
-    });
 
   setupInterface();
   setupLayerControls();
@@ -138,8 +133,6 @@ let generate = () => {
   glyphs[0].noise();
   glyphs[0].draw(outputimg);
 
-  let l = 1;
-
   /* traverse structure */
   let stack = [];
   stack.push(glyphs[0]);
@@ -161,21 +154,24 @@ let generate = () => {
             y: t.anchor.y + y * h + t.padding.y,
           },
           dim: {
-            x: layers[l].dim.x,
-            y: layers[l].dim.y,
+            x: layers[t.layer_id + 1].dim.x,
+            y: layers[t.layer_id + 1].dim.y,
           },
           size: {
             width: w - t.padding.x,
             height: h - t.padding.y,
           },
-          seed: layers[l].seed + t.cells[i],
+          seed: layers[t.layer_id + 1].seed + t.cells[i],
           noise: {
-            scale: layers[l].noise.scale,
-            steps: layers[l].noise.steps,
+            scale: layers[t.layer_id + 1].noise.scale,
+            steps: layers[t.layer_id + 1].noise.steps,
           },
-          stroke_color: layers[l].stroke_color,
-          fill_color: layers[l].fill_color,
-          padding: { x: layers[l].padding.x, y: layers[l].padding.y },
+          stroke_color: layers[t.layer_id + 1].stroke_color,
+          fill_color: layers[t.layer_id + 1].fill_color,
+          padding: {
+            x: layers[t.layer_id + 1].padding.x,
+            y: layers[t.layer_id + 1].padding.y,
+          },
         });
 
         glyph.noise();
@@ -183,9 +179,7 @@ let generate = () => {
 
         glyphs.push(glyph);
 
-        // if (l < layers.length - 1) {
-          // l += 1;
-        if(glyph.layer_id < layers.length - 1) {
+        if (glyph.layer_id < layers.length - 1) {
           stack.push(glyph);
         }
       }
@@ -298,6 +292,11 @@ const setupLayerControls = () => {
     createAdjustableNumberInput(
       layerControl.querySelector(".dimX input"),
       (v) => {
+        if (layer.dim.aspectLock) {
+          layer.dim.y = v;
+          layerControl.querySelector(".dimY input").value = layer.dim.y;
+        }
+
         layer.dim.x = v;
         if (bAutoGenerate) generate();
       },
@@ -311,13 +310,35 @@ const setupLayerControls = () => {
     createAdjustableNumberInput(
       layerControl.querySelector(".dimY input"),
       (v) => {
+        if (layer.dim.aspectLock) {
+          layer.dim.x = v;
+          layerControl.querySelector(".dimX input").value = layer.dim.x;
+        }
+
         layer.dim.y = v;
+
         if (bAutoGenerate) generate();
       },
       0.0,
       undefined,
       true
     );
+
+    /* dimensions aspect lock */
+    layerControl
+      .querySelector(".dim .aspectLockButton")
+      .addEventListener("click", () => {
+        layer.dim.aspectLock = !layer.dim.aspectLock;
+        if (layer.dim.aspectLock) {
+          layerControl
+            .querySelector(".dim .aspectLockButton")
+            .classList.add("active");
+        } else {
+          layerControl
+            .querySelector(".dim .aspectLockButton")
+            .classList.remove("active");
+        }
+      });
 
     /* padding */
     // layerControl.querySelector(".paddingX input").value = layer.padding.x;
@@ -370,7 +391,7 @@ const setupLayerControls = () => {
 
     document.querySelector("#layersControlInner").appendChild(layerControl);
   }
-}
+};
 
 const updateLayerControls = (layer_idx) => {
   let layer = layers[layer_idx];
@@ -387,12 +408,10 @@ const updateLayerControls = (layer_idx) => {
 const setupInterface = () => {
   document.querySelector("#layersControlInner").textContent = "";
 
-  document.querySelector("#layerButtons").textContent = "";
-  // add level button
-  let addLevelButton = document.createElement("button");
-  addLevelButton.innerText = "add level";
-  addLevelButton.id = "addLevelButton";
-  document.querySelector("#layerButtons").appendChild(addLevelButton);
+  /* snapshot */
+  document.querySelector("#snapshotButton").addEventListener("click", (e) => {
+    snapshot();
+  });
 
   /* add level */
   const handleAddLevel = (e) => {
@@ -457,8 +476,6 @@ const setupInterface = () => {
     bAutoGenerate = Boolean(e.target.checked);
     window.localStorage.setItem("bAutoGenerate", bAutoGenerate);
   });
-
- 
 };
 
 const snapshot = () => {

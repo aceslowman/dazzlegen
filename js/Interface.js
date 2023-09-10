@@ -36,7 +36,7 @@ let createParameterInput = (
 };
 
 let createAdjustableNumberInput = (ele, cb, min, max, isInt = false) => {
-  ele.addEventListener("input", (e) => cb(Number(e.target.value)));
+  ele.addEventListener("change", (e) => cb(Number(e.target.value)));
 
   ele.addEventListener("mousedown", (e) => {
     let starting_position = { x: Number(e.clientX), y: Number(e.clientY) };
