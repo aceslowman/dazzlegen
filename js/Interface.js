@@ -39,6 +39,11 @@ let createAdjustableNumberInput = (ele, cb, min, max, isInt = false) => {
   ele.addEventListener("change", (e) => cb(Number(e.target.value)));
 
   ele.addEventListener("mousedown", (e) => {
+    // reject clicks near arrows on the right hand side
+    let inputBounds = ele.getBoundingClientRect();
+    if ((e.clientX - inputBounds.x) / inputBounds.width > 0.5) return;
+    document.body.style.cursor = "ns-resize";
+
     let starting_position = { x: Number(e.clientX), y: Number(e.clientY) };
     let starting_value = Number(ele.value);
 
@@ -46,23 +51,17 @@ let createAdjustableNumberInput = (ele, cb, min, max, isInt = false) => {
       e.preventDefault();
       let current_position = { x: Number(e.clientX), y: Number(e.clientY) };
 
+      /* TODO make this a constant value based on step */
       if (current_position.x - starting_position.x < 50) {
-        // zone 1
         ele.value =
-          starting_value + (starting_position.y - current_position.y) * 0.01;
-      } else if (current_position.x - starting_position.x < 100) {
-        // zone 2
-        ele.value =
-          starting_value + (starting_position.y - current_position.y) * 0.25;
-      } else if (current_position.x - starting_position.x < 150) {
-        // zone 3
-        ele.value =
-          starting_value + (starting_position.y - current_position.y) * 0.5;
+          starting_value +
+          Number((starting_position.y - current_position.y) * 0.05);
       } else {
-        // zone 3
         ele.value =
-          starting_value + (starting_position.y - current_position.y) * 1.0;
+          starting_value + (starting_position.y - current_position.y) * 0.1;
       }
+
+      if (ele.step) ele.value = Number(ele.value).toFixed();
 
       if (min !== undefined && ele.value < min) {
         ele.value = min;
@@ -72,7 +71,7 @@ let createAdjustableNumberInput = (ele, cb, min, max, isInt = false) => {
         ele.value = Math.floor(ele.value);
       }
 
-      // cb(Number(ele.value))
+      cb(Number(ele.value));
     };
 
     document.addEventListener("mousemove", handleMouseMove);

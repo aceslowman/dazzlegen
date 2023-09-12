@@ -466,12 +466,9 @@ const setupInterface = () => {
   });
 
   /* auto generate */
-  if (window.localStorage.getItem("bAutoGenerate")) {
-    bAutoGenerate = Boolean(window.localStorage.getItem("bAutoGenerate"));
-  } else {
-    bAutoGenerate = false;
-  }
-  document.querySelector("#autoGenTick").checked = bAutoGenerate;
+  bAutoGenerate = window.localStorage.getItem("bAutoGenerate") === "true";
+
+  document.querySelector("#autoGenTick").checked = Boolean(bAutoGenerate);
   document.querySelector("#autoGenTick").addEventListener("input", (e) => {
     bAutoGenerate = Boolean(e.target.checked);
     window.localStorage.setItem("bAutoGenerate", bAutoGenerate);
