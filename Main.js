@@ -405,12 +405,34 @@ const updateLayerControls = (layer_idx) => {
   layerControl.querySelector(".noiseSteps input").value = layer.noise.steps;
 };
 
+let showHelpPanel = false;
+
 const setupInterface = () => {
   document.querySelector("#layersControlInner").textContent = "";
 
   /* snapshot */
   document.querySelector("#snapshotButton").addEventListener("click", (e) => {
     snapshot();
+  });
+
+  /* help button */
+  document.querySelector("#helpButton").addEventListener("click", () => {
+    showHelpPanel = !showHelpPanel;
+    document.querySelector("#help").style.display = showHelpPanel
+      ? "block"
+      : "none";
+
+    if (showHelpPanel) {
+      document.querySelector("#helpButton").classList.add("active");
+    } else {
+      document.querySelector("#helpButton").classList.remove("active");
+    }
+  });
+
+  document.querySelector("#helpClose button").addEventListener("click", () => {
+    showHelpPanel = !showHelpPanel;
+    document.querySelector("#help").style.display = "none";
+    document.querySelector("#helpButton").classList.remove("active");
   });
 
   /* add level */

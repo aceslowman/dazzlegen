@@ -18,7 +18,12 @@
     <div id="outerContainer">
       <div id="topToolbar" class="toolbar">
         <h1>dazzlegen</h1>
-        <img id="mainTitle" src="img/dazzlegen_logo.png" alt="dazzlegen logo" />
+        <a href="https://aceslowman.com/dazzlegen/"
+          ><img
+            id="mainTitle"
+            src="img/dazzlegen_logo.png"
+            alt="dazzlegen logo"
+        /></a>
         <div id="version">v 1.1</div>
 
         <button id="randomizeAllButton">randomize all</button>
@@ -34,15 +39,15 @@
           <option value="1024">1024x1024</option>
         </select>
         <button id="snapshotButton">export</button>
+        <button id="helpButton">help</button>
       </div>
       <div id="container">
         <div id="controls">
           <div id="layersControl">
-            <!-- this is copied in Dazzle.js -->
+            <!-- this is copied in Main.js -->
             <div id="layersControlInner"></div>
             <div id="layerButtons">
               <button id="addLevelButton">add level</button>
-              <!-- <button id="removeLevelButton">remove level</button> -->
             </div>
           </div>
 
@@ -142,6 +147,102 @@
         <div id="workArea"></div>
       </div>
     </div>
+    <div id="helpContainer">
+
+      <div id="help">
+        <div id="helpClose"><button class="square">x</button></div>
+  
+  
+        <div class="verticalFlex">
+          <div id="bigTitle">
+            
+            <img
+            id="helpTitle"
+            src="img/itch_cover.png"
+            alt="dazzlegen cover"
+        />
+          </div>
+          <a id="updateAlert" href="#updates"></a>
+        </div>
+  
+  
+  
+        <!-- <img class="fullWidth" src="img/interface_sample2.png" alt="a sample of the interface for goosegrid" /> -->
+  
+        <h2>???</h2>
+  
+        <p>
+          dazzlegen is a pattern generator. It works by applying stepped noise recursively. It works best
+          when combined as an input or a map for other tools.
+        </p>
+
+<div class="contentRow">
+
+  <img src="img/dazzlegen_wqbfsc.png" /> >
+  <img src="img/dazzlegen_ebdig4.png" /> >
+  <img src="img/dazzlegen_m9gwtq.png" />
+</div>
+<!--   
+        <p st<yle="color:orange;">
+          Thi>s tool works best in Chrome!
+        </p>
+  
+        <ul>
+          <li><a href="#interface">Interface</a></li>
+          <li><a href="#shortcuts">Keyboard Shortcuts</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#updates">Updates</a></li>
+        </ul>
+  
+        <div class="contentSection">
+          <h3 id="interface">Interface</h3>
+  
+          <p>
+            The interface consists of a grid and a number of toolbars. The grid
+            can be interacted with using a mouse, keyboard, or MIDI controller.
+            Grids contain nodes (and other grids), allowing for deeply nested
+            patterns.
+          </p>
+        </div>
+  
+        
+        
+        <div class="contentSection">
+          <h3 id="shortcuts">Keyboard Shortcuts</h3>
+  
+          <table>
+            <tr>
+              <th>Key</th>
+              <th>Action</th>
+            </tr>
+            <tr>
+              <td>shift-r</td>
+              <td>fill selection with random</td>
+            </tr>
+          </table>
+        </div> -->
+        <div class="contentSection">
+          <h3 id="about">About</h3>
+          <p>
+            This tool was made by Austin Slominski (<a href="https://linktr.ee/aceslowman">@aceslowman</a>) in 2023. Let
+            me know if you have any issues or suggestions! This
+            is still a work in progress.
+          </p>
+          <p>If you come across any bugs, please let me know by creating a
+            thread on the <a href="https://aceslowman.itch.io/dazzlegen/community">itch.io community page</a>.
+          </p>
+        </div>
+        <!-- <div class="contentSection">
+          <h3 id="updates">Updates</h3>          
+           <h4>6/8/23</h4>
+          <p>
+            Added MIDI sync, which can now be found under settings. 
+          </p>      
+        </div> -->
+      </div>
+    </div>
+    </div>
+  
     <script type="module" defer src="Main.js"></script>
   </body>
 </html>
