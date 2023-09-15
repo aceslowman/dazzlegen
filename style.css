@@ -281,3 +281,36 @@ dialog {
   align-items: center;
   justify-content: space-between;
 }
+
+/* responsive design for mobile */
+
+@media screen and (orientation: portrait) {
+  #container {
+    flex-flow: column-reverse;
+  }
+  #layersControl {
+    flex-flow: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .layerControl {
+    width: 300px;
+    margin-right: 15px;
+  }
+  #layersControlInner {
+    flex-flow: row;
+    display: flex;
+  }
+  #controls {
+    max-width: initial;
+
+    flex-flow: row;
+  }
+  .toolbar {
+    flex-flow: row wrap;
+  }
+  #workArea {
+    width: 100%;
+  }
+}
+/* @media screen and (orientation:landscape) { } */

@@ -7,7 +7,7 @@
     - [x] add functionality to input elements allowing for easier adjustable drag
     - [s] fix padding on levels (greater than 1)
     - [x] fix issue with small area appearing in the upper left corner of output
-    - [ ] implement aspect lock
+    - [x] implement aspect lock
     - [ ] tidy up and refactor code
  */
 
@@ -58,6 +58,7 @@ const randOpts = {
 };
 
 window.setup = () => {
+  /* get the work area bounds */
   window.workAreaElement = document.querySelector("#workArea");
   window.workAreaBounds = window.workAreaElement.getBoundingClientRect();
   let s =
