@@ -28,7 +28,7 @@ let pixel_density = 1;
 /* describes the behavior of each successive layer */
 let layers = [
   {
-    dim: { x: 30, y: 30, aspectLock: false },
+    dim: { x: 20, y: 20, aspectLock: false },
     seed: Math.floor(Math.random() * 1000),
     noise: {
       scale: 0.1,
@@ -37,10 +37,10 @@ let layers = [
     padding: { x: 0, y: 0 },
   },
   {
-    dim: { x: 3, y: 3, aspectLock: false },
+    dim: { x: 6, y: 6, aspectLock: false },
     seed: Math.floor(Math.random() * 1000),
     noise: {
-      scale: 0.1,
+      scale: 0.7,
       steps: 6,
     },
     padding: { x: 0, y: 0 },
@@ -60,15 +60,9 @@ const randOpts = {
 };
 
 window.setup = () => {
-  /* get the work area bounds */
-  window.workAreaElement = document.querySelector("#workArea");
-  window.workAreaBounds = window.workAreaElement.getBoundingClientRect();
-  let s =
-    window.workAreaBounds.width > window.workAreaBounds.height
-      ? window.workAreaBounds.height
-      : window.workAreaBounds.width;
-  resizeCanvas(s - workarea_padding, s - workarea_padding);
-  cnv = createCanvas(s - workarea_padding, s - workarea_padding);
+  /* canvas is resized at end of setup() */
+  resizeCanvas(1,1);
+  cnv = createCanvas(1,1);
   cnv.parent("workArea");
 
   let ctx = cnv.canvas.getContext("2d");
@@ -77,18 +71,17 @@ window.setup = () => {
   ctx.msImageSmoothingEnabled = false;
   ctx.imageSmoothingEnabled = false;
 
+  setupInterface();
+
   // instead of using the pg, create one image and edit it's pixels
   outputimg = createImage(
-    Math.floor(window.workAreaBounds.width),
-    Math.floor(window.workAreaBounds.width)
+    Number(document.querySelector("#resolutionSelect").value),
+    Number(document.querySelector("#resolutionSelect").value)
   );
 
   generate();
-
-  setupInterface();
   setupLayerControls();
-
-  window.windowResized()
+  window.windowResized();
 };
 
 window.windowResized = () => {
@@ -112,7 +105,9 @@ let generate = () => {
     is not showing up 
   */
   setTimeout(() => {
+    /* apply shifting effect */
     pixelDensity(pixel_density);
+
     /* if there are no layers don't generate */
     if (!layers[0] || !layers[1]) return;
 
@@ -205,8 +200,9 @@ let generate = () => {
 
     image(outputimg, 0, 0, width, height);
 
+    /* hide loading screen now that were done */
     document.querySelector(".loading").style.display = "none";
-  }, 2);
+  }, 2); /* this delay helps with allowing the loading screen to display */
 };
 
 const randomize = (layer_idx, param_key) => {
@@ -225,8 +221,15 @@ const randomize = (layer_idx, param_key) => {
     updateLayerControls(layer_idx);
   } else if (layer) {
     /* otherwise randomize the full layer, if it exists */
-    layer.dim.x = random(randOpts.dim.x.min, randOpts.dim.x.max);
-    layer.dim.y = random(randOpts.dim.y.min, randOpts.dim.y.max);
+
+    layer.dim.x = Math.floor(random(randOpts.dim.x.min, randOpts.dim.x.max));
+
+    if (layer.dim.aspectLock) {
+      layer.dim.y = layer.dim.x;
+    } else {
+      layer.dim.y = Math.floor(random(randOpts.dim.y.min, randOpts.dim.y.max));
+    }
+
     layer.seed = random(randOpts.seed.min, randOpts.seed.max);
     layer.noise.scale = random(
       randOpts.noise.scale.min,
@@ -241,8 +244,13 @@ const randomize = (layer_idx, param_key) => {
     /* otherwise randomize everything */
     for (let i = 0; i < layers.length; i++) {
       layer = layers[i];
-      layer.dim.x = random(randOpts.dim.x.min, randOpts.dim.x.max);
-      layer.dim.y = random(randOpts.dim.y.min, randOpts.dim.y.max);
+      layer.dim.x = Math.floor(random(randOpts.dim.x.min, randOpts.dim.x.max));
+
+      if (layer.dim.aspectLock) {
+        layer.dim.y = layer.dim.x;
+      } else {
+        layer.dim.y = Math.floor(random(randOpts.dim.y.min, randOpts.dim.y.max));
+      }
       layer.seed = random(randOpts.seed.min, randOpts.seed.max);
       layer.noise.scale = random(
         randOpts.noise.scale.min,

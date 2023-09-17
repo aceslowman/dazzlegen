@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=1"
     />
     <title>dazzlegen</title>
     <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
@@ -18,7 +18,8 @@
     <div id="outerContainer">
       <div id="topToolbar" class="toolbar">
         <h1>dazzlegen</h1>
-        <a href="https://aceslowman.com/dazzlegen/"
+        <!-- <a href="https://aceslowman.com/dazzlegen/" -->
+        <a href="https://github.com/aceslowman/dazzlegen" target="_blank"
           ><img
             id="mainTitle"
             src="img/dazzlegen_logo.png"
@@ -29,7 +30,7 @@
         <button id="randomizeAllButton">randomize all</button>
         <button id="generateButton">generate</button>
         <div class="checkboxButton">
-          auto: <input id="autoGenTick" type="checkbox" />
+          autogen: <input id="autoGenTick" type="checkbox" />
         </div>
         <select id="resolutionSelect">
           <option value="64">64x64</option>
@@ -38,9 +39,11 @@
           <option value="512">512x512</option>
           <option value="1024">1024x1024</option>
         </select>
-        <button id="snapshotButton">export</button>
+        <button id="snapshotButton">save image</button>
+        <div id="pixel_density" class="checkboxButton">
+          <label>shift</label><input type="number" value="1" />
+        </div>
         <button id="helpButton">help</button>
-        <div id="pixel_density" class="checkboxButton"><label>shift</label><input type="number" value="1" /></div>
       </div>
       <div id="container">
         <div id="controls">
@@ -145,11 +148,12 @@
             </div>
           </div>
         </div>
-        <div id="workArea">    <div class="loading">
-          <!-- <h1>dazzlegen</h1> -->
-          rendering
-          <div class="spin"></div>
-        </div></div>
+        <div id="workArea">
+          <div class="loading">
+            rendering
+            <div class="spin"></div>
+          </div>
+        </div>
       </div>
     </div>
     <div id="helpContainer">
@@ -166,10 +170,6 @@
           </div>
           <a id="updateAlert" href="#updates"></a>
         </div>
-
-        <!-- <img class="fullWidth" src="img/interface_sample2.png" alt="a sample of the interface for goosegrid" /> -->
-
-        <!-- <h2>What is this?</h2> -->
 
         <p>
           dazzlegen is a pattern generator. It works by applying stepped noise
@@ -188,46 +188,10 @@
           output at times. Try randomizing parameters using the dice icon. Also,
           beware high numbers when using the 'dim' parameters, especially in
           higher levels (> 2).
+
+          It's pretty prone to crashing the browser tab at the moment. If this happens, just open a new tab, close the stalled tab, and then reload.
         </p>
-        <!--   
-        <p st<yle="color:orange;">
-          Thi>s tool works best in Chrome!
-        </p>
-  
-        <ul>
-          <li><a href="#interface">Interface</a></li>
-          <li><a href="#shortcuts">Keyboard Shortcuts</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#updates">Updates</a></li>
-        </ul>
-  
-        <div class="contentSection">
-          <h3 id="interface">Interface</h3>
-  
-          <p>
-            The interface consists of a grid and a number of toolbars. The grid
-            can be interacted with using a mouse, keyboard, or MIDI controller.
-            Grids contain nodes (and other grids), allowing for deeply nested
-            patterns.
-          </p>
-        </div>
-  
-        
-        
-        <div class="contentSection">
-          <h3 id="shortcuts">Keyboard Shortcuts</h3>
-  
-          <table>
-            <tr>
-              <th>Key</th>
-              <th>Action</th>
-            </tr>
-            <tr>
-              <td>shift-r</td>
-              <td>fill selection with random</td>
-            </tr>
-          </table>
-        </div> -->
+
         <div class="contentSection">
           <h3 id="about">About</h3>
           <p>
@@ -245,17 +209,15 @@
             >.
           </p>
         </div>
-        <!-- <div class="contentSection">
+        <div class="contentSection">
           <h3 id="updates">Updates</h3>          
-           <h4>6/8/23</h4>
+           <h4>9/17/23</h4>
           <p>
-            Added MIDI sync, which can now be found under settings. 
+            Released v1.1 
           </p>      
-        </div> -->
+        </div>
       </div>
     </div>
-
-
 
     <script type="module" defer src="Main.js"></script>
   </body>
