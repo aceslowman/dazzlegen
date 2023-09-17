@@ -21,7 +21,9 @@ let bAutoGenerate = false;
 
 let cnv, outputimg;
 
-const workarea_padding = 60;
+const workarea_padding = 30;
+
+let pixel_density = 1;
 
 /* describes the behavior of each successive layer */
 let layers = [
@@ -99,97 +101,110 @@ window.windowResized = () => {
 };
 
 let generate = () => {
-  /* if there are no layers don't generate */
-  if (!layers[0] || !layers[1]) return;
+  // show loading overlay
+  document.querySelector(".loading").style.display = "block";
+  background(0);
 
-  /* refresh image */
-  outputimg = createImage(outputimg.width, outputimg.width);
-  outputimg.loadPixels();
+  /* 
+    setTimeout helps with issue where loading screen 
+    is not showing up 
+  */
+  setTimeout(() => {
+    pixelDensity(pixel_density);
+    /* if there are no layers don't generate */
+    if (!layers[0] || !layers[1]) return;
 
-  glyphs = [
-    new Glyph({
-      layer_id: 0,
-      anchor: {
-        x: 0,
-        y: 0,
-      },
-      dim: {
-        ...layers[0].dim,
-      },
-      size: {
-        width: outputimg.width,
-        height: outputimg.height,
-      },
-      seed: layers[0].seed,
-      noise: {
-        scale: layers[0].noise.scale,
-        steps: layers[0].noise.steps,
-      },
-      stroke_color: layers[0].stroke_color,
-      fill_color: layers[0].fill_color,
-      padding: { ...layers[0].padding },
-    }),
-  ];
+    /* refresh image */
+    outputimg = createImage(outputimg.width, outputimg.width);
+    outputimg.loadPixels();
 
-  glyphs[0].noise();
-  glyphs[0].draw(outputimg);
+    glyphs = [
+      new Glyph({
+        layer_id: 0,
+        anchor: {
+          x: 0,
+          y: 0,
+        },
+        dim: {
+          ...layers[0].dim,
+        },
+        size: {
+          width: outputimg.width,
+          height: outputimg.height,
+        },
+        seed: layers[0].seed,
+        noise: {
+          scale: layers[0].noise.scale,
+          steps: layers[0].noise.steps,
+        },
+        stroke_color: layers[0].stroke_color,
+        fill_color: layers[0].fill_color,
+        padding: { ...layers[0].padding },
+      }),
+    ];
 
-  /* traverse structure */
-  let stack = [];
-  stack.push(glyphs[0]);
+    glyphs[0].noise();
+    glyphs[0].draw(outputimg);
 
-  while (stack.length) {
-    let obj = stack.pop();
+    /* traverse structure */
+    let stack = [];
+    stack.push(glyphs[0]);
 
-    for (let x = 0, i = 0; x < obj.dim.x; x++) {
-      for (let y = 0; y < obj.dim.y; y++, i++) {
-        let t = obj;
+    while (stack.length) {
+      let obj = stack.pop();
 
-        let w = t.size.width / t.dim.x;
-        let h = t.size.height / t.dim.y;
+      for (let x = 0, i = 0; x < obj.dim.x; x++) {
+        for (let y = 0; y < obj.dim.y; y++, i++) {
+          let t = obj;
 
-        let glyph = new Glyph({
-          layer_id: t.layer_id + 1,
-          anchor: {
-            x: t.anchor.x + x * w + t.padding.x,
-            y: t.anchor.y + y * h + t.padding.y,
-          },
-          dim: {
-            x: layers[t.layer_id + 1].dim.x,
-            y: layers[t.layer_id + 1].dim.y,
-          },
-          size: {
-            width: w - t.padding.x,
-            height: h - t.padding.y,
-          },
-          seed: layers[t.layer_id + 1].seed + t.cells[i],
-          noise: {
-            scale: layers[t.layer_id + 1].noise.scale,
-            steps: layers[t.layer_id + 1].noise.steps,
-          },
-          stroke_color: layers[t.layer_id + 1].stroke_color,
-          fill_color: layers[t.layer_id + 1].fill_color,
-          padding: {
-            x: layers[t.layer_id + 1].padding.x,
-            y: layers[t.layer_id + 1].padding.y,
-          },
-        });
+          let w = t.size.width / t.dim.x;
+          let h = t.size.height / t.dim.y;
 
-        glyph.noise();
-        glyph.draw(outputimg);
+          let glyph = new Glyph({
+            layer_id: t.layer_id + 1,
+            anchor: {
+              x: t.anchor.x + x * w + t.padding.x,
+              y: t.anchor.y + y * h + t.padding.y,
+            },
+            dim: {
+              x: layers[t.layer_id + 1].dim.x,
+              y: layers[t.layer_id + 1].dim.y,
+            },
+            size: {
+              width: w - t.padding.x,
+              height: h - t.padding.y,
+            },
+            seed: layers[t.layer_id + 1].seed + t.cells[i],
+            noise: {
+              scale: layers[t.layer_id + 1].noise.scale,
+              steps: layers[t.layer_id + 1].noise.steps,
+            },
+            stroke_color: layers[t.layer_id + 1].stroke_color,
+            fill_color: layers[t.layer_id + 1].fill_color,
+            padding: {
+              x: layers[t.layer_id + 1].padding.x,
+              y: layers[t.layer_id + 1].padding.y,
+            },
+          });
 
-        glyphs.push(glyph);
+          glyph.noise();
+          glyph.draw(outputimg);
 
-        if (glyph.layer_id < layers.length - 1) {
-          stack.push(glyph);
+          glyphs.push(glyph);
+
+          if (glyph.layer_id < layers.length - 1) {
+            stack.push(glyph);
+          }
         }
       }
     }
-  }
 
-  outputimg.updatePixels();
+    outputimg.updatePixels();
 
-  image(outputimg, 0, 0, width, height);
+    image(outputimg, 0, 0, width, height);
+
+    document.querySelector(".loading").style.display = "none";
+  }, 2);
 };
 
 const randomize = (layer_idx, param_key) => {
@@ -409,6 +424,12 @@ const updateLayerControls = (layer_idx) => {
 let showHelpPanel = false;
 
 const setupInterface = () => {
+  /* pixel density effect */
+  document.querySelector("#pixel_density").addEventListener("input", (e) => {
+    pixel_density = Number(e.target.value);
+    if (bAutoGenerate) generate();
+  });
+
   document.querySelector("#layersControlInner").textContent = "";
 
   /* snapshot */

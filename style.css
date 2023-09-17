@@ -13,10 +13,6 @@ body,
   font-family: monospace !important;
 }
 
-canvas {
-  box-shadow: 0px 0px 20px 0px;
-}
-
 #version {
   display: flex;
   color: white;
@@ -59,7 +55,7 @@ select {
 }
 
 .checkboxButton {
-  padding: 5px;
+  padding: 0px 5px;
   display: flex;
   flex-flow: row;
   align-items: center;
@@ -95,6 +91,13 @@ select:hover {
   padding: 5px;
   font-size: 1.4em;
   display: none;
+}
+
+.toolbar input {
+  /* height:100%; */
+  margin: 0px 5px;
+  max-width: 30px;
+  /* border-bottom: 1px solid black; */
 }
 
 #mainTitle {
@@ -138,6 +141,10 @@ select:hover {
   justify-content: center;
   flex-grow: 2;
   overflow: hidden;
+}
+
+#workArea canvas {
+  box-shadow: 0px 0px 20px 0px;
 }
 
 .flowVertical {
@@ -282,6 +289,10 @@ dialog {
   justify-content: space-between;
 }
 
+.contentRow img {
+  flex-shrink: 2;
+}
+
 /* responsive design for mobile */
 
 @media screen and (orientation: portrait) {
@@ -289,6 +300,7 @@ dialog {
     flex-flow: column-reverse;
   }
   #layersControl {
+    padding: 5px 10px;
     flex-flow: row;
     overflow-x: auto;
     overflow-y: hidden;
@@ -314,3 +326,48 @@ dialog {
   }
 }
 /* @media screen and (orientation:landscape) { } */
+
+/* ------------------------------ */
+/* loading screen */
+@keyframes spinner {
+  0% {
+    transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(-50%, -50%, 0) rotate(360deg);
+  }
+}
+
+.loading {
+  position: absolute;
+  display: none;
+}
+
+.loading h1 {
+  color: white;
+  position: absolute;
+  font-size: 1.5em;
+  bottom: 0px;
+  right: 22px;
+}
+
+.loading {
+  color: white;
+  align-self: center;
+}
+
+.spin::before {
+  animation: 1.5s linear infinite spinner;
+  animation-play-state: inherit;
+  border: solid 2px black;
+  border-bottom-color: white;
+  border-radius: 50%;
+  content: "";
+  height: 150px;
+  width: 150px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(50%, 50%, 0);
+  will-change: transform;
+}

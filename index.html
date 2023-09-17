@@ -40,6 +40,7 @@
         </select>
         <button id="snapshotButton">export</button>
         <button id="helpButton">help</button>
+        <div id="pixel_density" class="checkboxButton"><label>shift</label><input type="number" value="1" /></div>
       </div>
       <div id="container">
         <div id="controls">
@@ -68,7 +69,7 @@
             <div class="flowVertical">
               <div class="paramGroup dim">
                 <div class="paramLabelRow">
-                  <label>dim</label>
+                  <label>dimensions</label>
                   <div class="tooltip">
                     ?
                     <span class="tooltiptext"
@@ -106,7 +107,7 @@
 
               <div class="paramGroup noise">
                 <div class="paramLabelRow">
-                  <label>noise</label>
+                  <label>pattern</label>
                   <div class="tooltip">
                     ?
                     <span class="tooltiptext"
@@ -144,7 +145,11 @@
             </div>
           </div>
         </div>
-        <div id="workArea"></div>
+        <div id="workArea">    <div class="loading">
+          <!-- <h1>dazzlegen</h1> -->
+          rendering
+          <div class="spin"></div>
+        </div></div>
       </div>
     </div>
     <div id="helpContainer">
@@ -249,6 +254,8 @@
         </div> -->
       </div>
     </div>
+
+
 
     <script type="module" defer src="Main.js"></script>
   </body>
