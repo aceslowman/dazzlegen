@@ -87,6 +87,8 @@ window.setup = () => {
 
   setupInterface();
   setupLayerControls();
+
+  window.windowResized()
 };
 
 window.windowResized = () => {
